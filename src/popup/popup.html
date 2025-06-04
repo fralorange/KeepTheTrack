@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>KeepTheTrack Configuration</title>
+        <link rel="stylesheet" href="popup.css">
+    </head>
+    <body>
+        <div class="container heading">
+            <h3>KeepTheTrack</h3>
+        </div>
+        <fieldset>
+            <legend>Choose your filters</legend>
+
+            <div>
+                <input type="checkbox" name="author" id="author-box">
+                <label for="author">By author</label>
+            </div>
+
+            <div>
+                <input type="checkbox" name="game" id="game-box">
+                <label for="game">By game (if it exists)</label>
+            </div>
+
+            <div>
+                <input type="checkbox" name="name" id="name-box">
+                <label for="name">By name</label>
+                <input type="text" id="name-text-box" class="hidden fit">
+            </div>
+        </fieldset>
+    </body>
+    <script src="popup.js"></script>
+</html>

@@ -1,0 +1,18 @@
+body {
+    min-width: 200px;
+    max-width: 400px;
+}
+
+.heading {
+    text-align: center;
+}
+
+.fit {
+    width: 100%;
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+}
