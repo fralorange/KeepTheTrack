@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icons/logo256.png" alt="logo"></img>
+  <img src="assets/doc/logo256.png" alt="logo"></img>
 </p>
 
 <h1 align="center">KeepTheTrack</h1>

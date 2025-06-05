@@ -1,5 +1,4 @@
 const authorCheckBox = document.getElementById('author-box');
-const gameCheckBox = document.getElementById('game-box');
 const nameCheckBox = document.getElementById('name-box');
 const nameTextBox = document.getElementById('name-text-box');
 let nameTextBoxDebounce;
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', (_e) => {
             chrome.storage.sync.set({
                 filters: {
                     byAuthor: false,
-                    byGame: false,
                     byName: {
                         enabled: false,
                         value: ""
@@ -31,7 +29,6 @@ document.addEventListener('DOMContentLoaded', (_e) => {
         } else {
             const filters = data.filters;
             authorCheckBox.checked = filters.byAuthor;
-            gameCheckBox.checked = filters.byGame;
             nameCheckBox.checked = filters.byName.enabled;
             nameTextBox.value = filters.byName.value;
             toggleVisibility(nameTextBox, nameCheckBox.checked);
@@ -45,15 +42,6 @@ authorCheckBox.addEventListener('change', (e) => {
     chrome.storage.sync.get('filters', (data) => {
         const filters = data.filters;
         filters.byAuthor = isChecked;
-        chrome.storage.sync.set({ filters });
-    });
-});
-
-gameCheckBox.addEventListener('change', (e) => {
-    const isChecked = e.currentTarget.checked;
-    chrome.storage.sync.get('filters', (data) => {
-        const filters = data.filters;
-        filters.byGame = isChecked;
         chrome.storage.sync.set({ filters });
     });
 });
