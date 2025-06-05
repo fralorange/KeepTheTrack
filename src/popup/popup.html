@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>KeepTheTrack Configuration</title>
+        <title data-i18n="extensionConfiguration">KeepTheTrack Configuration</title>
         <link rel="stylesheet" href="popup.css">
     </head>
     <body>
@@ -11,19 +11,20 @@
             <h2>KeepTheTrack</h2>
         </div>
         <fieldset>
-            <legend>Choose your filters</legend>
+            <legend data-i18n="extensionFilters">Choose your filters</legend>
 
             <div>
                 <input type="checkbox" name="author" id="author-box" role="switch">
-                <label for="author">By author</label>
+                <label for="author" data-i18n="extensionByAuthor">By author</label>
             </div>
 
             <div>
                 <input type="checkbox" name="name" id="name-box" role="switch">
-                <label for="name">By name</label>
+                <label for="name" data-i18n="extensionByName">By name</label>
                 <input type="text" id="name-text-box" class="hidden fit">
             </div>
         </fieldset>
     </body>
+    <script src="../utils/i18n.js"></script>
     <script src="popup.js"></script>
 </html>

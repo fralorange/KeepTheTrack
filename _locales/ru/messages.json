@@ -1,0 +1,31 @@
+{
+    "extensionName": {
+        "message": "KeepTheTrack - Фильтруйте следующие видео",
+        "description": "Название расширения."
+    },
+
+    "extensionDescription": {
+        "message": "Переопределяет автовоспроизведение YouTube, чтобы пользователь мог фильтровать следующие видео.",
+        "description": "Описание расширения."
+    },
+
+    "extensionConfiguration": {
+        "message": "Конфигурация KeepTheTrack",
+        "description": "Название всплывающего окна."
+    },
+
+    "extensionFilters": {
+        "message": "Выберите ваши фильтры",
+        "description": "Легенда фильтрации."
+    },
+
+    "extensionByAuthor": {
+        "message": "По автору",
+        "description": "Фильтр по автору."
+    },
+
+    "extensionByName": {
+        "message": "По имени",
+        "description": "Фильтр по имени."
+    }
+}
