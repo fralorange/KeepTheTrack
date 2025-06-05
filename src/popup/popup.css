@@ -81,13 +81,15 @@ input[type='text'] {
 }
 
 .container {
-    display: block;
-    position: relative;
+    display: flex;
+    gap: 10px;
     padding: 2.5%;
 }
 
 .heading {
     text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .fit {

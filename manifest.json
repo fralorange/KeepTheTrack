@@ -23,5 +23,12 @@
         },
         "default_title": "KeepTheTrack",
         "default_popup": "src/popup/popup.html"
+    },
+    "icons": {
+        "16": "assets/icons/logo16.png",
+        "24": "assets/icons/logo24.png",
+        "32": "assets/icons/logo32.png",
+        "48": "assets/icons/logo48.png",
+        "128": "assets/icons/logo128.png"
     }
 }
