@@ -1,0 +1,31 @@
+{
+    "extensionName": {
+        "message": "KeepTheTrack - Filter next videos",
+        "description": "Name of the extension."
+    },
+
+    "extensionDescription": {
+        "message": "Overrides YouTube autoplay, so that the user can filter the following videos.",
+        "description": "Description of the extension."
+    },
+
+    "extensionConfiguration": {
+        "message": "KeepTheTrack Configuration",
+        "description": "The name of the pop-up window."
+    },
+
+    "extensionFilters": {
+        "message": "Choose your filters",
+        "description": "Filtration Legend."
+    },
+
+    "extensionByAuthor": {
+        "message": "By Author",
+        "description": "Filter by author."
+    },
+
+    "extensionByName": {
+        "message": "By Name",
+        "description": "Filter by name."
+    }
+}
