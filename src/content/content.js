@@ -24,7 +24,8 @@
                     });
                 }
 
-                nextVideo = filteredContents.length > 0 ? filteredContents[0].url : null;
+                nextVideo = filteredContents.length > 0 ? filteredContents[0].urlEl : null;
+                console.log(`next video: ${nextVideo}`);
                 resolve();
             });
         })
@@ -42,33 +43,29 @@
 
             const urlEl = card.querySelector('a#thumbnail[href^="/watch"]')
                 || card.querySelector('a.yt-simple-endpoint[href^="/watch"]');
-            const rawHref = urlEl ? urlEl.getAttribute('href').trim() : null;
-            const url = rawHref ? `https://www.youtube.com${rawHref}` : null;
 
             const authorEl = card.querySelector('ytd-channel-name yt-formatted-string');
             const author = authorEl ? authorEl.textContent.trim() : null;
 
-            return { title, author, url }
+            return { title, author, urlEl }
         });
 
         await applyFilters();
 
         youtubePlayer.addEventListener('ended', (e) => {
             if (!youtubePlayer.hasAttribute('loop') && nextVideo) {
-                window.location.href = nextVideo;
+                nextVideo.click();
             }
         });
     };
-
-    chrome.runtime.onMessage.addListener(({ type }, _sender, _response) => {
-        if (type === 'NEW') {
-            newVideoLoaded();
-        }
-    });
 
     chrome.storage.onChanged.addListener(async (changes, area) => {
         if (area == 'sync' && changes.filters) {
             await applyFilters();
         }
     });
+
+    document.addEventListener('yt-navigate-finish', () => {
+        newVideoLoaded();
+    })
 })();
