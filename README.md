@@ -11,11 +11,15 @@
 KeepTheTrack is an open-source browser extension to filter autoplay videos on YouTube.
 
 ## Installation
-- Download the [archive](https://github.com/fralorange/KeepTheTrack/archive/refs/heads/master.zip) with the source code, unzip the downloaded archive.
-- Open the **Extensions** section of your browser.
-- Enable **Developer mode** (In the Extensions page, locate the "Developer mode" toggle and enable it).
-- Click **"Load unpacked"** button.
-- Select the root directory of the unpacked archive (the one where manifest.json is located).
+- Developer Mode Way
+  - Download the [archive](https://github.com/fralorange/KeepTheTrack/archive/refs/heads/master.zip) with the source code, unzip the downloaded archive.
+  - Open the **Extensions** section of your browser.
+  - Enable **Developer mode** (In the Extensions page, locate the "Developer mode" toggle and enable it).
+  - Click **"Load unpacked"** button.
+  - Select the root directory of the unpacked archive (the one where manifest.json is located).
+- CRX File Way
+  - Go to [releases](https://github.com/fralorange/KeepTheTrack/releases) and download the latest crx file.
+  - Follow the instructions in the release description.
 
 ## Usage
 - Open the extension popup from the extensions menu in your browser.
