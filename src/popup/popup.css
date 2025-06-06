@@ -18,11 +18,30 @@ body {
     }
 }
 
+body.loading {
+    opacity: 0;
+    pointer-events: none;
+}
+
+body.loading input[role='switch'] {
+    transition: none !important;
+}
+
+body.loaded {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.2s ease;
+}
+
 fieldset {
     background-color: rgba(255, 255, 255, 0.05); 
     border: 1px solid rgba(128, 128, 128, 0.5); 
     padding: 1em;
     border-radius: 0.5em;
+}
+
+legend {
+    font-weight: 500;
 }
 
 label {
@@ -80,6 +99,27 @@ input[type='text'] {
     }
 }
 
+footer {
+    margin-top: 5%;
+}
+
+footer #github-logo {
+  opacity: 0.2;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+footer #github-logo:hover,
+footer:hover #github-logo {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.about {
+    display: flex;
+    justify-content: center;
+    margin: 2.5% 0;
+}
+
 .container {
     display: flex;
     gap: 10px;
@@ -100,4 +140,60 @@ input[type='text'] {
 
 .hidden {
     display: none;
+}
+
+#video-holder {
+    max-width: 300px;         
+    max-height: 170px;        
+    overflow: hidden;        
+    position: relative;
+}
+
+#video-holder img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid rgba(128, 128, 128, 0.5); 
+}
+
+#video-holder .ytd-thumbnail-overlay-resume-playback-renderer,
+#video-holder .ytd-thumbnail-overlay-time-status-renderer,
+#video-holder .ytd-thumbnail-overlay-now-playing-renderer {
+    display: none !important;
+}
+
+#github-logo {
+    display: inline-block; 
+}
+
+@media (prefers-color-scheme: dark) {
+    #github-logo {
+        content: url('../../assets/vendor/github/github-mark-white.svg');
+    }
+
+    #github-logo:hover {
+        filter: drop-shadow(0 0 10px rgba(255,255,255,0.35));
+        transition: filter 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    #github-logo:active {
+        filter: drop-shadow(0 0 2px rgba(255,255,255,0.75))
+                drop-shadow(0 0 4px rgba(255,255,255,0.50));
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    #github-logo {
+        content: url('../../assets/vendor/github/github-mark.svg');
+    }
+
+    #github-logo:hover {
+        filter: drop-shadow(0 0 10px rgba(52,52,52,1));
+        transition: filter 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    #github-logo:active {
+        filter: drop-shadow(0 0 2px rgba(52,52,52,0.75))
+                drop-shadow(0 0 4px rgba(52,52,52,0.50));
+    }
 }
