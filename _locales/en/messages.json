@@ -27,5 +27,10 @@
     "extensionByName": {
         "message": "By Name",
         "description": "Filter by name."
+    },
+
+    "extensionNextVideo": {
+        "message": "Next Video",
+        "description": "Next Video Legend."
     }
 }

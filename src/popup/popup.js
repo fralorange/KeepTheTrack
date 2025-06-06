@@ -1,7 +1,10 @@
+const nextVideoFieldset = document.getElementById('next-video-fieldset');
+const videoHolder = document.querySelector('div#video-holder.container');
 const authorCheckBox = document.getElementById('author-box');
 const nameCheckBox = document.getElementById('name-box');
 const nameTextBox = document.getElementById('name-text-box');
 let nameTextBoxDebounce;
+let nextVideoHTML;
 
 function toggleVisibility(element, visible, callback) {
     if (visible) {
@@ -14,27 +17,81 @@ function toggleVisibility(element, visible, callback) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', (_e) => {
-    chrome.storage.sync.get('filters', (data) => {
-        if (!data.filters) {
-            chrome.storage.sync.set({
-                filters: {
-                    byAuthor: false,
-                    byName: {
-                        enabled: false,
-                        value: ""
-                    }
-                }
-            });
-        } else {
-            const filters = data.filters;
-            authorCheckBox.checked = filters.byAuthor;
-            nameCheckBox.checked = filters.byName.enabled;
-            nameTextBox.value = filters.byName.value;
-            toggleVisibility(nameTextBox, nameCheckBox.checked);
-            chrome.storage.sync.set({ filters });
+function normalizeYTCardHref() {
+    const link = videoHolder.querySelector('a#thumbnail');
+    if (link) {
+        const relHref = link.getAttribute('href');
+        if (relHref.startsWith('/watch')) {
+            const fullUrl = 'https://www.youtube.com' + relHref;
+            
+            link.setAttribute('href', fullUrl);
+            link.setAttribute('target', '_blank');
         }
+    }
+}
+
+function pasteNextVideo() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (!tabs || !tabs[0]) {
+            return;
+        }
+        const tabId = tabs[0].id;
+
+        chrome.tabs.sendMessage(tabId, { action: 'requestNextVideo' }, (response) => {
+            if (chrome.runtime.lastError || nextVideoHTML === response?.data) {
+                return;
+            }
+            nextVideoHTML = response?.data;
+            toggleVisibility(nextVideoFieldset, nextVideoHTML);
+            if (nextVideoHTML) {
+                videoHolder.innerHTML = nextVideoHTML;
+                normalizeYTCardHref();
+            } else {
+                videoHolder.innerHTML = "";
+            }
+        });
     });
+}
+
+document.addEventListener('DOMContentLoaded', async (_e) => {
+    const body = document.body;
+
+    await new Promise((resolve) => {
+        chrome.storage.sync.get('filters', (data) => {
+            if (!data.filters) {
+                chrome.storage.sync.set({
+                    filters: {
+                        byAuthor: false,
+                        byName: {
+                            enabled: false,
+                            value: ""
+                        }
+                    }
+                }, resolve);
+            } else {
+                const filters = data.filters;
+                authorCheckBox.checked = filters.byAuthor;
+                nameCheckBox.checked = filters.byName.enabled;
+                nameTextBox.value = filters.byName.value;
+                toggleVisibility(nameTextBox, nameCheckBox.checked);
+                chrome.storage.sync.set({ filters }, resolve);
+            }
+        });
+    });
+
+    await new Promise((resolve) => {
+        pasteNextVideo();
+        resolve();
+    });
+
+    body.classList.remove('loading');
+    body.classList.add('loaded');
+});
+
+chrome.runtime.onMessage.addListener((message, _sender, _response) => {
+    if (message.action === 'nextVideoUpdated') {
+        pasteNextVideo(message.nextVideoHTML);
+    }
 });
 
 authorCheckBox.addEventListener('change', (e) => {
