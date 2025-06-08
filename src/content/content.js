@@ -10,6 +10,12 @@
 
     // Functions
 
+    const onYouTubeEnded = (e) => {
+        if (nextVideo) {
+            nextVideo.click();
+        }
+    }
+
     const updateNextVideo = (value) => {
         nextVideo = value;
         chrome.runtime.sendMessage({ action: "nextVideoUpdated", nextVideoHTML: nextVideo?.outerHTML });
@@ -49,6 +55,19 @@
         })
     }
 
+    const applySleepMode = async () => {
+        return new Promise((resolve) => {
+            chrome.storage.sync.get('modes', (data) => {
+                if (data.modes.sleep) {
+                    initSleepOverlay();
+                } else {
+                    destroySleepOverlay();
+                }
+                resolve();
+            })
+        })
+    }
+
     const newVideoLoaded = async () => {
         let youtubePlayer = document.getElementsByClassName('video-stream')[0];
         currentAuthor = (await waitForElement('#upload-info a')).innerText;
@@ -69,20 +88,18 @@
         });
 
         await applyFilters();
+        await applySleepMode();
 
-        youtubePlayer.addEventListener('ended', (e) => {
-            if (!youtubePlayer.hasAttribute('loop') && nextVideo) {
-                nextVideo.click();
-            }
-        });
+        youtubePlayer.removeEventListener('ended', onYouTubeEnded);
+        youtubePlayer.addEventListener('ended', onYouTubeEnded);
     };
 
-    const init = () => {
+    const init = async () => {
         newVideoLoaded();
         playlistObserver = startPlaylistObserver(async () => {
             await applyFilters();
         });
-        recommendationsObserver = startRecommendationsObserver(newVideoLoaded);
+        recommendationsObserver = await startRecommendationsObserver(newVideoLoaded);
     }
 
     // Browser listeners
@@ -90,6 +107,8 @@
     chrome.storage.onChanged.addListener(async (changes, area) => {
         if (area === 'sync' && changes.filters) {
             await applyFilters();
+        } else if (area === 'sync' && changes.modes) {
+            await applySleepMode();
         }
     });
 
@@ -104,16 +123,6 @@
     // Document listeners
 
     document.addEventListener('yt-navigate-finish', () => {
-        if (playlistObserver) {
-            playlistObserver.disconnect();
-            playlistObserver = null;
-        }
-        if (recommendationsObserver) {
-            recommendationsObserver.disconnect();
-            recommendationsObserver = null;
-        }
         init();
     });
-
-    document.addEventListener('DOMContentLoaded', init);
 })();

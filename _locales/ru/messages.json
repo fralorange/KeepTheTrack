@@ -15,7 +15,7 @@
     },
 
     "extensionFilters": {
-        "message": "Выберите ваши фильтры",
+        "message": "Фильтры",
         "description": "Легенда фильтрации."
     },
 
@@ -32,5 +32,15 @@
     "extensionNextVideo": {
         "message": "Следующее видео",
         "description": "Легенда следующего видео."
+    },
+
+    "extensionModes": {
+        "message": "Режимы просмотра ",
+        "description": "Легенда режимов просмотра."
+    },
+
+    "extensionSleepMode": {
+        "message": "Режим сна",
+        "description": "Название режима сна."
     }
 }

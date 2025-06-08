@@ -21,6 +21,8 @@ function startPlaylistObserver(onPlaylistVisible) {
         attributes: true,
         attributeFilter: ['hidden']
     });
+
+    return playlistObserver;
 }
 
 function debouncedRecommendationChanged(onRecommendationsChanged) {

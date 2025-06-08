@@ -11,8 +11,9 @@
             <img src="../../assets/icons/logo.svg" width="35" height="35">
             <h2>KeepTheTrack</h2>
         </div>
+
         <fieldset>
-            <legend data-i18n="extensionFilters">Choose your filters</legend>
+            <legend data-i18n="extensionFilters">Filters</legend>
 
             <div>
                 <input type="checkbox" name="author" id="author-box" role="switch">
@@ -23,6 +24,15 @@
                 <input type="checkbox" name="name" id="name-box" role="switch">
                 <label for="name" data-i18n="extensionByName">By name</label>
                 <input type="text" id="name-text-box" class="hidden fit">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n="extensionModes">Viewing Modes</legend>
+
+            <div>
+                <input type="checkbox" name="sleep" id="sleep-box" role="switch">
+                <label for="sleep" data-i18n="extensionSleepMode">Sleep Mode</label>
             </div>
         </fieldset>
 

@@ -1,5 +1,6 @@
 const nextVideoFieldset = document.getElementById('next-video-fieldset');
 const videoHolder = document.querySelector('div#video-holder.container');
+const sleepCheckBox = document.getElementById('sleep-box');
 const authorCheckBox = document.getElementById('author-box');
 const nameCheckBox = document.getElementById('name-box');
 const nameTextBox = document.getElementById('name-text-box');
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
     const body = document.body;
 
     await new Promise((resolve) => {
-        chrome.storage.sync.get('filters', (data) => {
+        chrome.storage.sync.get(['filters', 'modes'], (data) => {
             if (!data.filters) {
                 chrome.storage.sync.set({
                     filters: {
@@ -67,16 +68,27 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
                             value: ""
                         }
                     }
-                }, resolve);
+                });
             } else {
                 const filters = data.filters;
                 authorCheckBox.checked = filters.byAuthor;
                 nameCheckBox.checked = filters.byName.enabled;
                 nameTextBox.value = filters.byName.value;
                 toggleVisibility(nameTextBox, nameCheckBox.checked);
-                chrome.storage.sync.set({ filters }, resolve);
+            }
+
+            if (!data.modes) {
+                chrome.storage.sync.set({
+                    modes: {
+                        sleep: true,
+                    }
+                });
+            } else {
+                const modes = data.modes;
+                sleepCheckBox.checked = modes.sleep;
             }
         });
+        resolve();
     });
 
     await new Promise((resolve) => {
@@ -93,6 +105,8 @@ chrome.runtime.onMessage.addListener((message, _sender, _response) => {
         pasteNextVideo(message.nextVideoHTML);
     }
 });
+
+// Filters
 
 authorCheckBox.addEventListener('change', (e) => {
     const isChecked = e.currentTarget.checked;
@@ -130,4 +144,15 @@ nameTextBox.addEventListener('input', (e) => {
             chrome.storage.sync.set({ filters });
         })
     }, 300);
+});
+
+// Modes
+
+sleepCheckBox.addEventListener('change', (e) => {
+    const isChecked = e.currentTarget.checked;
+    chrome.storage.sync.get('modes', (data) => {
+        const modes = data.modes;
+        modes.sleep = isChecked;
+        chrome.storage.sync.set({ modes });
+    })
 });
