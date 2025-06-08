@@ -15,7 +15,7 @@
     },
 
     "extensionFilters": {
-        "message": "Choose your filters",
+        "message": "Filters",
         "description": "Filtration Legend."
     },
 
@@ -32,5 +32,15 @@
     "extensionNextVideo": {
         "message": "Next Video",
         "description": "Next Video Legend."
+    },
+
+    "extensionModes": {
+        "message": "Viewing Modes",
+        "description": "Viewing Modes Legend."
+    },
+
+    "extensionSleepMode": {
+        "message": "Sleep Mode",
+        "description": "Sleep Mode Name."
     }
 }
