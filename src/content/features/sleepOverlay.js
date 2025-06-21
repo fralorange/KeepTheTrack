@@ -23,7 +23,7 @@ function initSleepOverlay() {
     overlay.style.left = '0';
     overlay.style.width = '100%';
     overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
     overlay.style.pointerEvents = 'none';
     overlay.style.opacity = '0';
     overlay.style.transition = 'opacity 0.5s ease'; 

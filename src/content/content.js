@@ -90,8 +90,10 @@
         await applyFilters();
         await applySleepMode();
 
-        youtubePlayer.removeEventListener('ended', onYouTubeEnded);
-        youtubePlayer.addEventListener('ended', onYouTubeEnded);
+        if (youtubePlayer) {
+            youtubePlayer.removeEventListener('ended', onYouTubeEnded);
+            youtubePlayer.addEventListener('ended', onYouTubeEnded);
+        }
     };
 
     const init = async () => {
