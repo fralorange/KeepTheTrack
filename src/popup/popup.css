@@ -18,19 +18,9 @@ body {
     }
 }
 
-body.loading {
-    opacity: 0;
-    pointer-events: none;
-}
-
-body.loading input[role='switch'] {
+body.loading input[role='switch'],
+body.loading input[role='switch']::before {
     transition: none !important;
-}
-
-body.loaded {
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 0.2s ease;
 }
 
 fieldset {

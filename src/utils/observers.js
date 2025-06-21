@@ -1,5 +1,10 @@
 let debounceTimeout;
 
+/**
+ * Starts an observer for the playlist panel to detect when it becomes visible.
+ * @param {*} onPlaylistVisible - Callback function to execute when the playlist panel becomes visible.
+ * @returns {MutationObserver|null} - The MutationObserver instance or null if the playlist panel is not found.
+ */
 function startPlaylistObserver(onPlaylistVisible) {
     let playlistObserver = new MutationObserver(mutations => {
         for (let mut of mutations) {
@@ -25,6 +30,10 @@ function startPlaylistObserver(onPlaylistVisible) {
     return playlistObserver;
 }
 
+/**
+ * Debounces the recommendation change event to avoid excessive calls.
+ * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
+ */
 function debouncedRecommendationChanged(onRecommendationsChanged) {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
@@ -32,6 +41,11 @@ function debouncedRecommendationChanged(onRecommendationsChanged) {
     }, 200);
 }
 
+/**
+ * Starts an observer for the recommendations section to detect changes in video cards.
+ * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
+ * @returns 
+ */
 async function startRecommendationsObserver(onRecommendationsChanged) {
     let recommendationsObserver = new MutationObserver(mutations => {
         let changed = false;

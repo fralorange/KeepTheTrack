@@ -1,3 +1,8 @@
+/**
+ * Waits for an element to be present in the DOM.
+ * @param {*} selector - The CSS selector for the element to wait for.
+ * * @returns {Promise} - A promise that resolves with the element when it is found.
+ */
 function waitForElement(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -18,6 +23,13 @@ function waitForElement(selector) {
     });
 }
 
+/**
+ * Waits for elements to be present in the DOM, with debouncing and a maximum wait time.
+ * @param {*} selector - The CSS selector for the elements to wait for.
+ * @param {*} debounceTime - The time in milliseconds to debounce the checks.
+ * @param {*} maxWait - The maximum time in milliseconds to wait for the elements to appear.
+ * @returns {Promise} - A promise that resolves with an array of elements when they are found.
+ */
 function waitForElements(selector, debounceTime = 200, maxWait = 5000) {
     return new Promise(resolve => {
         let lastCount = 0;

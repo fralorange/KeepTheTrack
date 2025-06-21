@@ -1,9 +1,13 @@
-let inactivityTimeout;
 const inactivityDelay = 5000;
 
-let currentInstance = null;
+let inactivityTimeout;
+let currentInstance;
 
-function initSleepOverlay() {
+/**
+ * Creates a sleep overlay that appears after a period of inactivity in fullscreen mode.
+ * @returns {Object|null} Returns the current sleep overlay instance or null if it doesn't exist.
+ */
+function createSleepOverlay() {
     if (document.fullscreenElement && currentInstance) {
         return currentInstance;
     }
@@ -83,9 +87,29 @@ function initSleepOverlay() {
     return currentInstance;
 }
 
+/**
+ * Destroys the current sleep overlay instance if it exists.
+ */
 function destroySleepOverlay() {
     if (currentInstance) {
         currentInstance.destroy();
         currentInstance = null;
     }
+}
+
+/**
+ * Applies the sleep overlay based on the current mode settings.
+ * @returns {Promise<void>}
+ */
+async function applySleepOverlay() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get('modes', (data) => {
+            if (data.modes.sleep) {
+                createSleepOverlay();
+            } else {
+                destroySleepOverlay();
+            }
+            resolve();
+        })
+    })
 }

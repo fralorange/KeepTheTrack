@@ -15,6 +15,7 @@
                 "src/utils/utils.js", 
                 "src/utils/observers.js",
                 "src/content/features/sleepOverlay.js",
+                "src/content/features/autoplayOverride.js",
                 "src/content/content.js"
             ]
         }
