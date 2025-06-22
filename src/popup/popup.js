@@ -134,6 +134,19 @@ function setupModeListeners() {
     });
 }
 
+/**
+ * Sets up a listener for the options button to open the options page.
+ */
+function setupButtonListener() {
+    document.getElementById('options-btn')?.addEventListener('click', () => {
+        if (chrome.runtime.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+        } else {
+            window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async (_e) => {
     await new Promise((resolve) => {
         chrome.storage.sync.get(['filters', 'modes'], (data) => {
@@ -176,10 +189,13 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
     });
 
     requestAnimationFrame(() => {
-        document.body.classList.remove('loading');
+        setTimeout(() => {
+            document.body.classList.remove('loading');
+        }, 20); 
     });
 });
 
 setupMessagesHandler();
 setupFilterListeners();
 setupModeListeners();
+setupButtonListener();

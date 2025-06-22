@@ -110,6 +110,12 @@ footer:hover #github-logo {
     margin: 2.5% 0;
 }
 
+.option {
+    text-align: right;
+    margin: 0;
+    padding: 0;
+}
+
 .container {
     display: flex;
     gap: 10px;
@@ -120,6 +126,18 @@ footer:hover #github-logo {
     text-align: center;
     align-items: center;
     justify-content: center;
+    margin-top: 0;
+}
+
+.container.heading {
+    position: relative;     
+    padding: 1rem;
+}
+
+.container.heading .option {
+    position: absolute;     
+    top: 0.5rem;             
+    right: 0.5rem;           
 }
 
 .fit {
@@ -128,9 +146,39 @@ footer:hover #github-logo {
     box-sizing: border-box;
 }
 
+.btn {
+    cursor: pointer;
+}
+
 .hidden {
     display: none;
 }
+
+.icon-gear {
+    opacity: 0.8;
+    transition: opacity 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.icon-gear:hover {
+    opacity: 1;
+}
+
+.icon-gear:active {
+    opacity: 0.6;
+}
+
+@media (prefers-color-scheme: dark) {
+    .icon-gear {
+        filter: brightness(0) saturate(100%) invert(0%);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .icon-gear {
+        filter: brightness(0) saturate(100%) invert(90%);
+    }
+}
+
 
 #video-holder {
     max-width: 300px;         

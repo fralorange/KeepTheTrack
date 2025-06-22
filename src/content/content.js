@@ -19,7 +19,7 @@
         chrome.storage.onChanged.addListener(async (changes, area) => {
             if (area === 'sync' && changes.filters) {
                 await applyOverrideFilters();
-            } else if (area === 'sync' && changes.modes) {
+            } else if (area === 'sync' && (changes.modes || changes.preferences)) {
                 await applySleepOverlay();
             }
         });

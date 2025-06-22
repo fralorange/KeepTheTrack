@@ -42,5 +42,60 @@
     "extensionSleepMode": {
         "message": "Режим сна",
         "description": "Название режима сна."
+    },
+
+    "extensionOptions": {
+        "message": "Настройки KeepTheTrack ",
+        "description": "Название страницы настроек."
+    },
+
+    "extensionOptionsDescription": {
+        "message": "Настройте поведение и внешний вид расширения KeepTheTrack.",
+        "description": "Описание страницы опций."
+    },
+
+    "extensionOptionBehavior": {
+        "message": "Поведение",
+        "description": "Вкладка параметров поведения"
+    },
+
+    "extensionOptionAppearance": {
+        "message": "Внешний вид",
+        "description": "Вкладка 'Параметры внешнего вида'"
+    },
+
+    "extensionOptionAdvanced": {
+        "message": "Дополнительно",
+        "description": "Вкладка дополнительных опций"
+    },
+
+    "extensionOptionSliderLabel": {
+        "message": "Время наложения режима сна",
+        "description": "Метка ползунка времени наложения режима сна."
+    },
+
+    "extensionOptionSliderValue": {
+        "message": "Секунд",
+        "description": "Метка ползунка времени наложения режима сна."
+    },
+
+    "extensionOptionOpacitySliderLabel": {
+        "message": "Прозрачность наложения режима сна",
+        "description": "Метка ползунка прозрачности наложения режима сна."
+    },
+
+    "extensionOptionOpacitySliderValue": {
+        "message": "Альфа",
+        "description": "Метка ползунка прозрачности наложения режима сна."
+    },
+
+    "extensionOptionColorPickerLabel": {
+        "message": "Цвет наложения режима сна",
+        "description": "Метка выбора цвета наложения режима сна."
+    },
+
+    "extensionOptionResetButton": {
+        "message": "Сбросить настройки",
+        "description": "Кнопка сброса настроек расширения."
     }
 }
