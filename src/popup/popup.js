@@ -7,6 +7,12 @@ const nameTextBox = document.getElementById('name-text-box');
 let nameTextBoxDebounce;
 let nextVideoHTML;
 
+/**
+ * Toggles the visibility of an element and executes a callback if provided.
+ * @param {*} element - The DOM element to toggle visibility for. 
+ * @param {*} visible - A boolean indicating whether the element should be visible or not.
+ * @param {*} callback - An optional callback function to execute when the element is hidden.
+ */
 function toggleVisibility(element, visible, callback) {
     if (visible) {
         element.classList.remove('hidden');
@@ -18,6 +24,9 @@ function toggleVisibility(element, visible, callback) {
     }
 }
 
+/**
+ * Normalizes the YouTube card href by ensuring it points to the full URL.
+ */
 function normalizeYTCardHref() {
     const link = videoHolder.querySelector('a#thumbnail');
     if (link) {
@@ -31,6 +40,9 @@ function normalizeYTCardHref() {
     }
 }
 
+/**
+ * Pastes the next video HTML into the video holder and updates the visibility of the next video fieldset.
+ */
 function pasteNextVideo() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (!tabs || !tabs[0]) {
@@ -54,9 +66,88 @@ function pasteNextVideo() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', async (_e) => {
-    const body = document.body;
+/**
+ * Sets up a message listener to handle incoming messages from the content script.
+ */
+function setupMessagesHandler() {
+    chrome.runtime.onMessage.addListener((message, _sender, _response) => {
+        if (message.action === 'nextVideoUpdated') {
+            pasteNextVideo(message.nextVideoHTML);
+        }
+    });
+}
 
+/**
+ * Sets up listeners for filter checkboxes and text input.
+ */
+function setupFilterListeners() {
+    authorCheckBox.addEventListener('change', (e) => {
+        const isChecked = e.currentTarget.checked;
+        chrome.storage.sync.get('filters', (data) => {
+            const filters = data.filters;
+            filters.byAuthor = isChecked;
+            chrome.storage.sync.set({ filters });
+        });
+    });
+    
+    nameCheckBox.addEventListener('change', (e) => {
+        const isChecked = e.currentTarget.checked;
+        // Visual
+        toggleVisibility(nameTextBox, isChecked, () => {
+            nameTextBox.value = "";
+            nameTextBox.dispatchEvent(new Event('input', { bubbles: true}));
+        })
+        // Logic
+        chrome.storage.sync.get('filters', (data) => {
+            const filters = data.filters;
+            filters.byName.enabled = isChecked;
+            chrome.storage.sync.set({ filters });
+        });
+    });
+    
+    nameTextBox.addEventListener('input', (e) => {
+        clearTimeout(nameTextBoxDebounce);
+    
+        const targetValue = e.currentTarget.value;
+    
+        nameTextBoxDebounce = setTimeout(() => {
+            chrome.storage.sync.get('filters', (data) => {
+                const filters = data.filters;
+                filters.byName.value = targetValue;
+                chrome.storage.sync.set({ filters });
+            })
+        }, 300);
+    });
+}
+
+/**
+ * Sets up listeners for mode checkboxes.
+ */
+function setupModeListeners() {
+    sleepCheckBox.addEventListener('change', (e) => {
+        const isChecked = e.currentTarget.checked;
+        chrome.storage.sync.get('modes', (data) => {
+            const modes = data.modes;
+            modes.sleep = isChecked;
+            chrome.storage.sync.set({ modes });
+        })
+    });
+}
+
+/**
+ * Sets up a listener for the options button to open the options page.
+ */
+function setupButtonListener() {
+    document.getElementById('options-btn')?.addEventListener('click', () => {
+        if (chrome.runtime.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+        } else {
+            window.open(chrome.runtime.getURL('options.html'));
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async (_e) => {
     await new Promise((resolve) => {
         chrome.storage.sync.get(['filters', 'modes'], (data) => {
             if (!data.filters) {
@@ -87,8 +178,9 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
                 const modes = data.modes;
                 sleepCheckBox.checked = modes.sleep;
             }
+
+            resolve();
         });
-        resolve();
     });
 
     await new Promise((resolve) => {
@@ -96,63 +188,14 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
         resolve();
     });
 
-    body.classList.remove('loading');
-    body.classList.add('loaded');
-});
-
-chrome.runtime.onMessage.addListener((message, _sender, _response) => {
-    if (message.action === 'nextVideoUpdated') {
-        pasteNextVideo(message.nextVideoHTML);
-    }
-});
-
-// Filters
-
-authorCheckBox.addEventListener('change', (e) => {
-    const isChecked = e.currentTarget.checked;
-    chrome.storage.sync.get('filters', (data) => {
-        const filters = data.filters;
-        filters.byAuthor = isChecked;
-        chrome.storage.sync.set({ filters });
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            document.body.classList.remove('loading');
+        }, 20); 
     });
 });
 
-nameCheckBox.addEventListener('change', (e) => {
-    const isChecked = e.currentTarget.checked;
-    // Visual
-    toggleVisibility(nameTextBox, isChecked, () => {
-        nameTextBox.value = "";
-        nameTextBox.dispatchEvent(new Event('input', { bubbles: true}));
-    })
-    // Logic
-    chrome.storage.sync.get('filters', (data) => {
-        const filters = data.filters;
-        filters.byName.enabled = isChecked;
-        chrome.storage.sync.set({ filters });
-    });
-});
-
-nameTextBox.addEventListener('input', (e) => {
-    clearTimeout(nameTextBoxDebounce);
-
-    const targetValue = e.currentTarget.value;
-
-    nameTextBoxDebounce = setTimeout(() => {
-        chrome.storage.sync.get('filters', (data) => {
-            const filters = data.filters;
-            filters.byName.value = targetValue;
-            chrome.storage.sync.set({ filters });
-        })
-    }, 300);
-});
-
-// Modes
-
-sleepCheckBox.addEventListener('change', (e) => {
-    const isChecked = e.currentTarget.checked;
-    chrome.storage.sync.get('modes', (data) => {
-        const modes = data.modes;
-        modes.sleep = isChecked;
-        chrome.storage.sync.set({ modes });
-    })
-});
+setupMessagesHandler();
+setupFilterListeners();
+setupModeListeners();
+setupButtonListener();

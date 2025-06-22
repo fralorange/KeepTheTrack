@@ -1,9 +1,22 @@
+let preferences = {};
 let inactivityTimeout;
-const inactivityDelay = 5000;
+let currentInstance;
 
-let currentInstance = null;
+/**
+ * Applies the sleep overlay style based on user preferences.
+ * @param {HTMLElement} overlay - The overlay element to apply styles to.
+ */
+function applyOverlayStyle(overlay) {
+    const [r, g, b] = hexToRgb(preferences.sleepOverlayColor || '#000000');
+    const a = parseFloat(preferences.sleepOverlayOpacity) || 0.8;
+    overlay.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+}
 
-function initSleepOverlay() {
+/**
+ * Creates a sleep overlay that appears after a period of inactivity in fullscreen mode.
+ * @returns {Object|null} Returns the current sleep overlay instance or null if it doesn't exist.
+ */
+function createSleepOverlay() {
     if (document.fullscreenElement && currentInstance) {
         return currentInstance;
     }
@@ -23,10 +36,11 @@ function initSleepOverlay() {
     overlay.style.left = '0';
     overlay.style.width = '100%';
     overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
     overlay.style.pointerEvents = 'none';
     overlay.style.opacity = '0';
-    overlay.style.transition = 'opacity 0.5s ease'; 
+    overlay.style.transition = 'opacity 0.5s ease';
+    
+    applyOverlayStyle(overlay);
 
     playerContent.style.position = 'absolute';
     playerContent.appendChild(overlay);
@@ -42,7 +56,7 @@ function initSleepOverlay() {
     const resetInactivityTimer = () => {
         hideOverlay();
         clearTimeout(inactivityTimeout);
-        inactivityTimeout = setTimeout(showOverlay, inactivityDelay);
+        inactivityTimeout = setTimeout(showOverlay, (preferences.sleepOverlayDelay || 5) * 1000);
     };
 
     const startTrackingInactivity = () => {
@@ -83,9 +97,30 @@ function initSleepOverlay() {
     return currentInstance;
 }
 
+/**
+ * Destroys the current sleep overlay instance if it exists.
+ */
 function destroySleepOverlay() {
     if (currentInstance) {
         currentInstance.destroy();
         currentInstance = null;
     }
+}
+
+/**
+ * Applies the sleep overlay based on the current mode settings.
+ * @returns {Promise<void>}
+ */
+async function applySleepOverlay() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get(['modes', 'preferences'], (data) => {
+            preferences = data.preferences || {};
+            if (data.modes?.sleep) {
+                createSleepOverlay(); 
+            } else {
+                destroySleepOverlay();
+            }
+            resolve();
+        });
+    })
 }

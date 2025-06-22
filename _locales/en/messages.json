@@ -42,5 +42,60 @@
     "extensionSleepMode": {
         "message": "Sleep Mode",
         "description": "Sleep Mode Name."
+    },
+
+    "extensionOptions": {
+        "message": "KeepTheTrack Options",
+        "description": "Options Title."
+    },
+
+    "extensionOptionsDescription": {
+        "message": "Configure the behavior and appearance of the KeepTheTrack extension.",
+        "description": "Description of the options page."
+    },
+
+    "extensionOptionBehavior": {
+        "message": "Behavior",
+        "description": "Behavior options tab."
+    },
+
+    "extensionOptionAppearance": {
+        "message": "Appearance",
+        "description": "Appearance options tab."
+    },
+
+    "extensionOptionAdvanced": {
+        "message": "Advanced",
+        "description": "Advanced options tab."
+    },
+
+    "extensionOptionSliderLabel": {
+        "message": "Sleep Overlay Delay",
+        "description": "Label for the sleep overlay delay slider."
+    },
+
+    "extensionOptionSliderValue": {
+        "message": "Seconds",
+        "description": "Label for the sleep overlay delay slider value."
+    },
+
+    "extensionOptionOpacitySliderLabel" : {
+        "message": "Sleep Mode Opacity",
+        "description": "Label for the sleep mode opacity slider."
+    },
+
+    "extensionOptionOpacitySliderValue" : {
+        "message": "Alpha",
+        "description": "Label for the sleep mode opacity slider value."
+    },
+
+    "extensionOptionColorPickerLabel": {
+        "message": "Sleep Mode Color",
+        "description": "Label for the sleep mode color picker."
+    },
+
+    "extensionOptionResetButton": {
+        "message": "Reset to Default",
+        "description": "Button to reset options to default values."
     }
 }
