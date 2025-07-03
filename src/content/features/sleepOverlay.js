@@ -26,7 +26,9 @@ function createSleepOverlay() {
         currentInstance = null;
     }
 
-    const playerContent = document.querySelector('#player-container[role="complementary"]');
+    const playerContent = document.querySelector(
+        '#player-container[role="complementary"]'
+    );
     if (!playerContent) return;
 
     const overlay = document.createElement('div');
@@ -39,7 +41,7 @@ function createSleepOverlay() {
     overlay.style.pointerEvents = 'none';
     overlay.style.opacity = '0';
     overlay.style.transition = 'opacity 0.5s ease';
-    
+
     applyOverlayStyle(overlay);
 
     playerContent.style.position = 'absolute';
@@ -56,7 +58,10 @@ function createSleepOverlay() {
     const resetInactivityTimer = () => {
         hideOverlay();
         clearTimeout(inactivityTimeout);
-        inactivityTimeout = setTimeout(showOverlay, (preferences.sleepOverlayDelay || 5) * 1000);
+        inactivityTimeout = setTimeout(
+            showOverlay,
+            (preferences.sleepOverlayDelay || 5) * 1000
+        );
     };
 
     const startTrackingInactivity = () => {
@@ -86,13 +91,16 @@ function createSleepOverlay() {
     hideOverlay();
 
     currentInstance = {
-            destroy: () => {
-                stopTrackingInactivity();
-                document.removeEventListener('fullscreenchange', onFullscreenChange);
-                overlay.remove();
-                currentInstance = null;
-            }
-        };
+        destroy: () => {
+            stopTrackingInactivity();
+            document.removeEventListener(
+                'fullscreenchange',
+                onFullscreenChange
+            );
+            overlay.remove();
+            currentInstance = null;
+        },
+    };
 
     return currentInstance;
 }
@@ -116,11 +124,11 @@ async function applySleepOverlay() {
         chrome.storage.sync.get(['modes', 'preferences'], (data) => {
             preferences = data.preferences || {};
             if (data.modes?.sleep) {
-                createSleepOverlay(); 
+                createSleepOverlay();
             } else {
                 destroySleepOverlay();
             }
             resolve();
         });
-    })
+    });
 }

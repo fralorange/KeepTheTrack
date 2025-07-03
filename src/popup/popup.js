@@ -9,7 +9,7 @@ let nextVideoHTML;
 
 /**
  * Toggles the visibility of an element and executes a callback if provided.
- * @param {*} element - The DOM element to toggle visibility for. 
+ * @param {*} element - The DOM element to toggle visibility for.
  * @param {*} visible - A boolean indicating whether the element should be visible or not.
  * @param {*} callback - An optional callback function to execute when the element is hidden.
  */
@@ -18,7 +18,7 @@ function toggleVisibility(element, visible, callback) {
         element.classList.remove('hidden');
     } else {
         element.classList.add('hidden');
-        if (typeof callback == "function") {
+        if (typeof callback == 'function') {
             callback();
         }
     }
@@ -28,15 +28,22 @@ function toggleVisibility(element, visible, callback) {
  * Normalizes the YouTube card href by ensuring it points to the full URL.
  */
 function normalizeYTCardHref() {
-    const link = videoHolder.querySelector('a#thumbnail');
-    if (link) {
-        const relHref = link.getAttribute('href');
-        if (relHref.startsWith('/watch')) {
-            const fullUrl = 'https://www.youtube.com' + relHref;
-            
-            link.setAttribute('href', fullUrl);
-            link.setAttribute('target', '_blank');
-        }
+    const link = videoHolder.querySelector('a[href^="/watch"]');
+    if (!link) return;
+
+    const thumbVM = link.querySelector('yt-thumbnail-view-model');
+    if (thumbVM) {
+        Array.from(thumbVM.children).forEach((child) => {
+            if (!child.querySelector('img')) {
+                child.remove();
+            }
+        });
+    }
+
+    const relHref = link.getAttribute('href');
+    if (relHref.startsWith('/watch')) {
+        link.setAttribute('href', 'https://www.youtube.com' + relHref);
+        link.setAttribute('target', '_blank');
     }
 }
 
@@ -50,19 +57,26 @@ function pasteNextVideo() {
         }
         const tabId = tabs[0].id;
 
-        chrome.tabs.sendMessage(tabId, { action: 'requestNextVideo' }, (response) => {
-            if (chrome.runtime.lastError || nextVideoHTML === response?.data) {
-                return;
+        chrome.tabs.sendMessage(
+            tabId,
+            { action: 'requestNextVideo' },
+            (response) => {
+                if (
+                    chrome.runtime.lastError ||
+                    nextVideoHTML === response?.data
+                ) {
+                    return;
+                }
+                nextVideoHTML = response?.data;
+                toggleVisibility(nextVideoFieldset, nextVideoHTML);
+                if (nextVideoHTML) {
+                    videoHolder.innerHTML = nextVideoHTML;
+                    normalizeYTCardHref();
+                } else {
+                    videoHolder.innerHTML = '';
+                }
             }
-            nextVideoHTML = response?.data;
-            toggleVisibility(nextVideoFieldset, nextVideoHTML);
-            if (nextVideoHTML) {
-                videoHolder.innerHTML = nextVideoHTML;
-                normalizeYTCardHref();
-            } else {
-                videoHolder.innerHTML = "";
-            }
-        });
+        );
     });
 }
 
@@ -89,14 +103,14 @@ function setupFilterListeners() {
             chrome.storage.sync.set({ filters });
         });
     });
-    
+
     nameCheckBox.addEventListener('change', (e) => {
         const isChecked = e.currentTarget.checked;
         // Visual
         toggleVisibility(nameTextBox, isChecked, () => {
-            nameTextBox.value = "";
-            nameTextBox.dispatchEvent(new Event('input', { bubbles: true}));
-        })
+            nameTextBox.value = '';
+            nameTextBox.dispatchEvent(new Event('input', { bubbles: true }));
+        });
         // Logic
         chrome.storage.sync.get('filters', (data) => {
             const filters = data.filters;
@@ -104,18 +118,18 @@ function setupFilterListeners() {
             chrome.storage.sync.set({ filters });
         });
     });
-    
+
     nameTextBox.addEventListener('input', (e) => {
         clearTimeout(nameTextBoxDebounce);
-    
+
         const targetValue = e.currentTarget.value;
-    
+
         nameTextBoxDebounce = setTimeout(() => {
             chrome.storage.sync.get('filters', (data) => {
                 const filters = data.filters;
                 filters.byName.value = targetValue;
                 chrome.storage.sync.set({ filters });
-            })
+            });
         }, 300);
     });
 }
@@ -130,7 +144,7 @@ function setupModeListeners() {
             const modes = data.modes;
             modes.sleep = isChecked;
             chrome.storage.sync.set({ modes });
-        })
+        });
     });
 }
 
@@ -156,9 +170,9 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
                         byAuthor: false,
                         byName: {
                             enabled: false,
-                            value: ""
-                        }
-                    }
+                            value: '',
+                        },
+                    },
                 });
             } else {
                 const filters = data.filters;
@@ -172,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
                 chrome.storage.sync.set({
                     modes: {
                         sleep: true,
-                    }
+                    },
                 });
             } else {
                 const modes = data.modes;
@@ -191,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async (_e) => {
     requestAnimationFrame(() => {
         setTimeout(() => {
             document.body.classList.remove('loading');
-        }, 20); 
+        }, 20);
     });
 });
 

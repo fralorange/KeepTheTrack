@@ -6,12 +6,13 @@ let debounceTimeout;
  * @returns {MutationObserver|null} - The MutationObserver instance or null if the playlist panel is not found.
  */
 function startPlaylistObserver(onPlaylistVisible) {
-    let playlistObserver = new MutationObserver(mutations => {
+    let playlistObserver = new MutationObserver((mutations) => {
         for (let mut of mutations) {
             if (
                 mut.type === 'attributes' &&
                 mut.target.nodeType === Node.ELEMENT_NODE &&
-                mut.target.tagName.toLowerCase() === 'ytd-playlist-panel-renderer'
+                mut.target.tagName.toLowerCase() ===
+                    'ytd-playlist-panel-renderer'
             ) {
                 onPlaylistVisible();
             }
@@ -24,7 +25,7 @@ function startPlaylistObserver(onPlaylistVisible) {
     playlistObserver.observe(flexy, {
         subtree: true,
         attributes: true,
-        attributeFilter: ['hidden']
+        attributeFilter: ['hidden'],
     });
 
     return playlistObserver;
@@ -44,27 +45,28 @@ function debouncedRecommendationChanged(onRecommendationsChanged) {
 /**
  * Starts an observer for the recommendations section to detect changes in video cards.
  * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
- * @returns 
+ * @returns
  */
 async function startRecommendationsObserver(onRecommendationsChanged) {
-    let recommendationsObserver = new MutationObserver(mutations => {
+    let cardName = 'yt-lockup-view-model';
+    let recommendationsObserver = new MutationObserver((mutations) => {
         let changed = false;
         for (let mut of mutations) {
             if (mut.addedNodes.length || mut.removedNodes.length) {
-                mut.addedNodes.forEach(node => {
+                mut.addedNodes.forEach((node) => {
                     if (
                         node.nodeType === Node.ELEMENT_NODE &&
-                        (node.tagName.toLowerCase() === 'ytd-compact-video-renderer' ||
-                         node.querySelector('ytd-compact-video-renderer'))
+                        (node.tagName.toLowerCase() === cardName ||
+                            node.querySelector(cardName))
                     ) {
                         changed = true;
                     }
                 });
-                mut.removedNodes.forEach(node => {
+                mut.removedNodes.forEach((node) => {
                     if (
                         node.nodeType === Node.ELEMENT_NODE &&
-                        (node.tagName.toLowerCase === 'ytd-compact-video-renderer' ||
-                         node.querySelector('ytd-compact-video-renderer'))
+                        (node.tagName.toLowerCase === cardName ||
+                            node.querySelector(cardName))
                     ) {
                         changed = true;
                     }
@@ -77,8 +79,9 @@ async function startRecommendationsObserver(onRecommendationsChanged) {
         }
     });
 
-    const parent = 'ytd-item-section-renderer.style-scope.ytd-watch-next-secondary-results-renderer';
-    const child = 'div#contents.style-scope.ytd-item-section-renderer'
+    const parent =
+        'ytd-item-section-renderer.style-scope.ytd-watch-next-secondary-results-renderer';
+    const child = 'div#contents.style-scope.ytd-item-section-renderer';
     const container = await waitForElement(`${parent} ${child}`);
     if (!container) return null;
 
@@ -86,7 +89,7 @@ async function startRecommendationsObserver(onRecommendationsChanged) {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['src']
+        attributeFilter: ['src'],
     });
     return recommendationsObserver;
 }

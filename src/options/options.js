@@ -1,12 +1,12 @@
 const DEFAULT_PREFERENCES = {
     sleepOverlayDelay: 5,
     sleepOverlayOpacity: 0.8,
-    sleepOverlayColor: '#000000'
+    sleepOverlayColor: '#000000',
 };
 
 /**
  * Updates a user preference in Chrome's storage.
- * @param {*} key - The key for the preference to update. 
+ * @param {*} key - The key for the preference to update.
  * @param {*} value - The value to set for the preference.
  */
 function updatePreference(key, value) {
@@ -25,15 +25,15 @@ function setupTabs() {
     const contents = document.querySelectorAll('.tabs-container .content');
 
     const removeActiveClasses = () => {
-        tabs.forEach(tab => {
+        tabs.forEach((tab) => {
             tab.classList.remove('active');
         });
-    
-        contents.forEach(content => {
+
+        contents.forEach((content) => {
             content.classList.remove('active');
         });
     };
-    
+
     tabs.forEach((tab, i) => {
         tab.addEventListener('click', () => {
             removeActiveClasses();
@@ -103,8 +103,16 @@ function setupResetButton() {
     const resetButton = document.getElementsByClassName('reset-button')[0];
     resetButton.addEventListener('click', () => {
         chrome.storage.sync.set({ preferences: DEFAULT_PREFERENCES }, () => {
-            setupSlider('slider-delay', 'slider-delay-value', 'sleepOverlayDelay');
-            setupSlider('slider-opacity', 'slider-opacity-value', 'sleepOverlayOpacity');
+            setupSlider(
+                'slider-delay',
+                'slider-delay-value',
+                'sleepOverlayDelay'
+            );
+            setupSlider(
+                'slider-opacity',
+                'slider-opacity-value',
+                'sleepOverlayOpacity'
+            );
             setupColorPicker('color-picker', 'sleepOverlayColor');
         });
     });
