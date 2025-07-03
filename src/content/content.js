@@ -19,7 +19,10 @@
         chrome.storage.onChanged.addListener(async (changes, area) => {
             if (area === 'sync' && changes.filters) {
                 await applyOverrideFilters();
-            } else if (area === 'sync' && (changes.modes || changes.preferences)) {
+            } else if (
+                area === 'sync' &&
+                (changes.modes || changes.preferences)
+            ) {
                 await applySleepOverlay();
             }
         });
@@ -29,13 +32,15 @@
      * Sets up a message listener to handle requests from the background script.
      */
     const setupMessagesHandler = () => {
-        chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-            if (message.action === 'requestNextVideo') {
-                sendResponse({ data: nextVideo?.outerHTML });
-            } else if (message.action === 'requestTabUpdate') {
-                handleVideo();
+        chrome.runtime.onMessage.addListener(
+            (message, _sender, sendResponse) => {
+                if (message.action === 'requestNextVideo') {
+                    sendResponse({ data: nextVideo?.outerHTML });
+                } else if (message.action === 'requestTabUpdate') {
+                    handleVideo();
+                }
             }
-        });
+        );
     };
 
     /**
@@ -50,7 +55,9 @@
         playlistObserver = startPlaylistObserver(async () => {
             await applyOverrideFilters();
         });
-        recommendationsObserver = await startRecommendationsObserver(handleVideo);
+        recommendationsObserver = await startRecommendationsObserver(
+            handleVideo
+        );
     };
 
     /**

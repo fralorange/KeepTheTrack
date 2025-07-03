@@ -4,12 +4,12 @@
  * * @returns {Promise} - A promise that resolves with the element when it is found.
  */
 function waitForElement(selector) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         if (document.querySelector(selector)) {
             return resolve(document.querySelector(selector));
         }
 
-        const observer = new MutationObserver(mutations => {
+        const observer = new MutationObserver((mutations) => {
             if (document.querySelector(selector)) {
                 observer.disconnect();
                 resolve(document.querySelector(selector));
@@ -18,7 +18,7 @@ function waitForElement(selector) {
 
         observer.observe(document.body, {
             childList: true,
-            subtree: true
+            subtree: true,
         });
     });
 }
@@ -31,7 +31,7 @@ function waitForElement(selector) {
  * @returns {Promise} - A promise that resolves with an array of elements when they are found.
  */
 function waitForElements(selector, debounceTime = 200, maxWait = 5000) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         let lastCount = 0;
         let debounceTimer = null;
         let maxWaitTimer = null;
@@ -68,7 +68,10 @@ function waitForElements(selector, debounceTime = 200, maxWait = 5000) {
 function hexToRgb(hex) {
     hex = hex.replace(/^#/, '');
     if (hex.length === 3) {
-        hex = hex.split('').map(x => x + x).join('');
+        hex = hex
+            .split('')
+            .map((x) => x + x)
+            .join('');
     }
     const bigint = parseInt(hex, 16);
     const r = (bigint >> 16) & 255;
