@@ -1,101 +1,126 @@
 {
-    "extensionName": {
-        "message": "KeepTheTrack - Фильтруйте следующие видео",
-        "description": "Название расширения."
-    },
+	"extensionName": {
+		"message": "KeepTheTrack - Фильтруйте следующие видео",
+		"description": "Название расширения."
+	},
 
-    "extensionDescription": {
-        "message": "Переопределяет автовоспроизведение YouTube, чтобы пользователь мог фильтровать следующие видео.",
-        "description": "Описание расширения."
-    },
+	"extensionDescription": {
+		"message": "Переопределяет автовоспроизведение YouTube, чтобы пользователь мог фильтровать следующие видео.",
+		"description": "Описание расширения."
+	},
 
-    "extensionConfiguration": {
-        "message": "Конфигурация KeepTheTrack",
-        "description": "Название всплывающего окна."
-    },
+	"extensionVersion": {
+		"message": "Версия",
+		"description": "Версия расширения."
+	},
 
-    "extensionFilters": {
-        "message": "Фильтры",
-        "description": "Легенда фильтрации."
-    },
+	"extensionConfiguration": {
+		"message": "Конфигурация KeepTheTrack",
+		"description": "Название всплывающего окна."
+	},
 
-    "extensionByAuthor": {
-        "message": "По автору",
-        "description": "Фильтр по автору."
-    },
+	"extensionFilters": {
+		"message": "Фильтры",
+		"description": "Легенда фильтрации."
+	},
 
-    "extensionByName": {
-        "message": "По имени",
-        "description": "Фильтр по имени."
-    },
+	"extensionByAuthor": {
+		"message": "По автору",
+		"description": "Фильтр по автору."
+	},
 
-    "extensionNextVideo": {
-        "message": "Следующее видео",
-        "description": "Легенда следующего видео."
-    },
+	"extensionByName": {
+		"message": "По имени",
+		"description": "Фильтр по имени."
+	},
 
-    "extensionModes": {
-        "message": "Режимы просмотра ",
-        "description": "Легенда режимов просмотра."
-    },
+	"extensionNextVideo": {
+		"message": "Следующее видео",
+		"description": "Легенда следующего видео."
+	},
 
-    "extensionSleepMode": {
-        "message": "Режим сна",
-        "description": "Название режима сна."
-    },
+	"extensionModes": {
+		"message": "Режимы просмотра ",
+		"description": "Легенда режимов просмотра."
+	},
 
-    "extensionOptions": {
-        "message": "Настройки KeepTheTrack ",
-        "description": "Название страницы настроек."
-    },
+	"extensionSleepMode": {
+		"message": "Режим сна",
+		"description": "Название режима сна."
+	},
 
-    "extensionOptionsDescription": {
-        "message": "Настройте поведение и внешний вид расширения KeepTheTrack.",
-        "description": "Описание страницы опций."
-    },
+	"extensionOptions": {
+		"message": "Настройки KeepTheTrack ",
+		"description": "Название страницы настроек."
+	},
 
-    "extensionOptionBehavior": {
-        "message": "Поведение",
-        "description": "Вкладка параметров поведения"
-    },
+	"extensionOptionsDescription": {
+		"message": "Настройте поведение и внешний вид расширения KeepTheTrack.",
+		"description": "Описание страницы опций."
+	},
 
-    "extensionOptionAppearance": {
-        "message": "Внешний вид",
-        "description": "Вкладка 'Параметры внешнего вида'"
-    },
+	"extensionOptionBehavior": {
+		"message": "Поведение",
+		"description": "Вкладка параметров поведения"
+	},
 
-    "extensionOptionAdvanced": {
-        "message": "Дополнительно",
-        "description": "Вкладка дополнительных опций"
-    },
+	"extensionOptionAppearance": {
+		"message": "Внешний вид",
+		"description": "Вкладка 'Параметры внешнего вида'"
+	},
 
-    "extensionOptionSliderLabel": {
-        "message": "Время наложения режима сна",
-        "description": "Метка ползунка времени наложения режима сна."
-    },
+	"extensionOptionAdvanced": {
+		"message": "Дополнительно",
+		"description": "Вкладка дополнительных опций"
+	},
 
-    "extensionOptionSliderValue": {
-        "message": "Секунд",
-        "description": "Метка ползунка времени наложения режима сна."
-    },
+	"extensionOptionSliderLabel": {
+		"message": "Время наложения режима сна",
+		"description": "Метка ползунка времени наложения режима сна."
+	},
 
-    "extensionOptionOpacitySliderLabel": {
-        "message": "Прозрачность наложения режима сна",
-        "description": "Метка ползунка прозрачности наложения режима сна."
-    },
+	"extensionOptionSliderValue": {
+		"message": "Секунд",
+		"description": "Метка ползунка времени наложения режима сна."
+	},
 
-    "extensionOptionOpacitySliderValue": {
-        "message": "Альфа",
-        "description": "Метка ползунка прозрачности наложения режима сна."
-    },
+	"extensionOptionOpacitySliderLabel": {
+		"message": "Прозрачность наложения режима сна",
+		"description": "Метка ползунка прозрачности наложения режима сна."
+	},
 
-    "extensionOptionColorPickerLabel": {
-        "message": "Цвет наложения режима сна",
-        "description": "Метка выбора цвета наложения режима сна."
-    },
+	"extensionOptionOpacitySliderValue": {
+		"message": "Альфа",
+		"description": "Метка ползунка прозрачности наложения режима сна."
+	},
 
-    "extensionOptionResetButton": {
-        "message": "Сбросить настройки",
-        "description": "Кнопка сброса настроек расширения."
-    }
+	"extensionOptionColorPickerLabel": {
+		"message": "Цвет наложения режима сна",
+		"description": "Метка выбора цвета наложения режима сна."
+	},
+
+	"extensionOptionResetButton": {
+		"message": "Сбросить настройки",
+		"description": "Кнопка сброса настроек расширения."
+	},
+
+	"extensionResetWarning": {
+		"message": "Вы уверены, что хотите сбросить настройки до значений по умолчанию?",
+		"description": "Сообщение с подтверждением перед сбросом настроек к значениям по умолчанию."
+	},
+
+	"extensionOptionImportButton": {
+		"message": "Импортировать настройки",
+		"description": "Кнопка для импорта настроек из файла."
+	},
+
+	"extensionOptionExportButton": {
+		"message": "Экспортировать настройки",
+		"description": "Кнопка для экспорта настроек в файл."
+	},
+
+	"extensionOptionImportError": {
+		"message": "При импорте файла произошла ошибка.",
+		"description": "Сообщение об ошибке, отображаемое при возникновении проблемы с импортом настроек."
+	}
 }
