@@ -1,6 +1,6 @@
 {
 	"extensionName": {
-		"message": "KeepTheTrack - Filter next videos",
+		"message": "KeepTheTrack - YouTube Video Filter",
 		"description": "Name of the extension."
 	},
 
@@ -29,9 +29,19 @@
 		"description": "Filter by author."
 	},
 
+	"extensionByAuthorDescription": {
+		"message": "Filter videos by the author of the current video.",
+		"description": "Description for filtering by author."
+	},
+
 	"extensionByName": {
 		"message": "By Name",
 		"description": "Filter by name."
+	},
+
+	"extensionByNameDescription": {
+		"message": "Filter videos by the name of the existing video.",
+		"description": "Description for filtering by name."
 	},
 
 	"extensionNextVideo": {
@@ -47,6 +57,11 @@
 	"extensionSleepMode": {
 		"message": "Sleep Mode",
 		"description": "Sleep Mode Name."
+	},
+
+	"extensionSleepModeDescription": {
+		"message": "A mode that covers the screen with a customizable overlay to remove bright light from the monitor.",
+		"description": "Description of the sleep mode."
 	},
 
 	"extensionOptions": {

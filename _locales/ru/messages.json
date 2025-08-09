@@ -1,6 +1,6 @@
 {
 	"extensionName": {
-		"message": "KeepTheTrack - Фильтруйте следующие видео",
+		"message": "KeepTheTrack - Фильтр видео YouTube",
 		"description": "Название расширения."
 	},
 
@@ -29,9 +29,19 @@
 		"description": "Фильтр по автору."
 	},
 
+	"extensionByAuthorDescription": {
+		"message": "Фильтр видео по автору текущего видео.",
+		"description": "Описание для фильтрации по автору."
+	},
+
 	"extensionByName": {
 		"message": "По имени",
 		"description": "Фильтр по имени."
+	},
+
+	"extensionByNameDescription": {
+		"message": "Фильтр видео по названию существующего видео.",
+		"description": "Описание для фильтрации по имени."
 	},
 
 	"extensionNextVideo": {
@@ -47,6 +57,11 @@
 	"extensionSleepMode": {
 		"message": "Режим сна",
 		"description": "Название режима сна."
+	},
+
+	"extensionSleepModeDescription": {
+		"message": "Режим который перекрывает экран настраиваемым наложением, чтобы убрать сильный свет от монитора.",
+		"description": "Описание режима сна."
 	},
 
 	"extensionOptions": {
