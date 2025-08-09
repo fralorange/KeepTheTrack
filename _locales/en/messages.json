@@ -1,101 +1,141 @@
 {
-    "extensionName": {
-        "message": "KeepTheTrack - Filter next videos",
-        "description": "Name of the extension."
-    },
+	"extensionName": {
+		"message": "KeepTheTrack - YouTube Video Filter",
+		"description": "Name of the extension."
+	},
 
-    "extensionDescription": {
-        "message": "Overrides YouTube autoplay, so that the user can filter the following videos.",
-        "description": "Description of the extension."
-    },
+	"extensionDescription": {
+		"message": "Overrides YouTube autoplay, so that the user can filter the following videos.",
+		"description": "Description of the extension."
+	},
 
-    "extensionConfiguration": {
-        "message": "KeepTheTrack Configuration",
-        "description": "The name of the pop-up window."
-    },
+	"extensionVersion": {
+		"message": "Version",
+		"description": "Version of the extension."
+	},
 
-    "extensionFilters": {
-        "message": "Filters",
-        "description": "Filtration Legend."
-    },
+	"extensionConfiguration": {
+		"message": "KeepTheTrack Configuration",
+		"description": "The name of the pop-up window."
+	},
 
-    "extensionByAuthor": {
-        "message": "By Author",
-        "description": "Filter by author."
-    },
+	"extensionFilters": {
+		"message": "Filters",
+		"description": "Filtration Legend."
+	},
 
-    "extensionByName": {
-        "message": "By Name",
-        "description": "Filter by name."
-    },
+	"extensionByAuthor": {
+		"message": "By Author",
+		"description": "Filter by author."
+	},
 
-    "extensionNextVideo": {
-        "message": "Next Video",
-        "description": "Next Video Legend."
-    },
+	"extensionByAuthorDescription": {
+		"message": "Filter videos by the author of the current video.",
+		"description": "Description for filtering by author."
+	},
 
-    "extensionModes": {
-        "message": "Viewing Modes",
-        "description": "Viewing Modes Legend."
-    },
+	"extensionByName": {
+		"message": "By Name",
+		"description": "Filter by name."
+	},
 
-    "extensionSleepMode": {
-        "message": "Sleep Mode",
-        "description": "Sleep Mode Name."
-    },
+	"extensionByNameDescription": {
+		"message": "Filter videos by the name of the existing video.",
+		"description": "Description for filtering by name."
+	},
 
-    "extensionOptions": {
-        "message": "KeepTheTrack Options",
-        "description": "Options Title."
-    },
+	"extensionNextVideo": {
+		"message": "Next Video",
+		"description": "Next Video Legend."
+	},
 
-    "extensionOptionsDescription": {
-        "message": "Configure the behavior and appearance of the KeepTheTrack extension.",
-        "description": "Description of the options page."
-    },
+	"extensionModes": {
+		"message": "Viewing Modes",
+		"description": "Viewing Modes Legend."
+	},
 
-    "extensionOptionBehavior": {
-        "message": "Behavior",
-        "description": "Behavior options tab."
-    },
+	"extensionSleepMode": {
+		"message": "Sleep Mode",
+		"description": "Sleep Mode Name."
+	},
 
-    "extensionOptionAppearance": {
-        "message": "Appearance",
-        "description": "Appearance options tab."
-    },
+	"extensionSleepModeDescription": {
+		"message": "A mode that covers the screen with a customizable overlay to remove bright light from the monitor.",
+		"description": "Description of the sleep mode."
+	},
 
-    "extensionOptionAdvanced": {
-        "message": "Advanced",
-        "description": "Advanced options tab."
-    },
+	"extensionOptions": {
+		"message": "KeepTheTrack Options",
+		"description": "Options Title."
+	},
 
-    "extensionOptionSliderLabel": {
-        "message": "Sleep Overlay Delay",
-        "description": "Label for the sleep overlay delay slider."
-    },
+	"extensionOptionsDescription": {
+		"message": "Configure the behavior and appearance of the KeepTheTrack extension.",
+		"description": "Description of the options page."
+	},
 
-    "extensionOptionSliderValue": {
-        "message": "Seconds",
-        "description": "Label for the sleep overlay delay slider value."
-    },
+	"extensionOptionBehavior": {
+		"message": "Behavior",
+		"description": "Behavior options tab."
+	},
 
-    "extensionOptionOpacitySliderLabel" : {
-        "message": "Sleep Mode Opacity",
-        "description": "Label for the sleep mode opacity slider."
-    },
+	"extensionOptionAppearance": {
+		"message": "Appearance",
+		"description": "Appearance options tab."
+	},
 
-    "extensionOptionOpacitySliderValue" : {
-        "message": "Alpha",
-        "description": "Label for the sleep mode opacity slider value."
-    },
+	"extensionOptionAdvanced": {
+		"message": "Advanced",
+		"description": "Advanced options tab."
+	},
 
-    "extensionOptionColorPickerLabel": {
-        "message": "Sleep Mode Color",
-        "description": "Label for the sleep mode color picker."
-    },
+	"extensionOptionSliderLabel": {
+		"message": "Sleep Overlay Delay",
+		"description": "Label for the sleep overlay delay slider."
+	},
 
-    "extensionOptionResetButton": {
-        "message": "Reset to Default",
-        "description": "Button to reset options to default values."
-    }
+	"extensionOptionSliderValue": {
+		"message": "Seconds",
+		"description": "Label for the sleep overlay delay slider value."
+	},
+
+	"extensionOptionOpacitySliderLabel": {
+		"message": "Sleep Mode Opacity",
+		"description": "Label for the sleep mode opacity slider."
+	},
+
+	"extensionOptionOpacitySliderValue": {
+		"message": "Alpha",
+		"description": "Label for the sleep mode opacity slider value."
+	},
+
+	"extensionOptionColorPickerLabel": {
+		"message": "Sleep Mode Color",
+		"description": "Label for the sleep mode color picker."
+	},
+
+	"extensionOptionResetButton": {
+		"message": "Reset to Default",
+		"description": "Button to reset settings to default values."
+	},
+
+	"extensionResetWarning": {
+		"message": "Are you sure you want to reset settings to default?",
+		"description": "Confirmation message before resetting settings to default values."
+	},
+
+	"extensionOptionImportButton": {
+		"message": "Import settings",
+		"description": "Button to import settings from a file."
+	},
+
+	"extensionOptionExportButton": {
+		"message": "Export settings",
+		"description": "Button to export settings to a file."
+	},
+
+	"extensionOptionImportError": {
+		"message": "An error occurred while importing the file.",
+		"description": "Error message displayed when there is an issue importing settings."
+	}
 }

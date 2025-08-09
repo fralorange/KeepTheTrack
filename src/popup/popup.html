@@ -1,59 +1,78 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title data-i18n="extensionConfiguration">KeepTheTrack Configuration</title>
-        <link rel="stylesheet" href="popup.css">
-    </head>
-    <body class="loading">
-        <div class="container heading">
-            <span class="option">
-                <a class="btn"><img id="options-btn" class="icon-gear" src="../../assets/icons/gear.svg" width="15" height="15" alt="Settings Icon"></a>
-            </span>
-            
-            <img src="../../assets/icons/logo.svg" width="35" height="35">
-            <h2>KeepTheTrack</h2>
-        </div>
+	<head>
+		<meta charset="UTF-8" />
+		<title data-i18n="extensionConfiguration">KeepTheTrack Configuration</title>
+		<link rel="stylesheet" href="popup.css" />
+	</head>
+	<body class="loading">
+		<div class="container heading">
+			<span class="option">
+				<a class="btn"
+					><img
+						id="options-btn"
+						class="icon-gear"
+						src="../../assets/icons/gear.svg"
+						width="15"
+						height="15"
+						alt="Settings Icon"
+				/></a>
+			</span>
 
-        <fieldset>
-            <legend data-i18n="extensionFilters">Filters</legend>
+			<img src="../../assets/icons/logo.svg" width="35" height="35" />
+			<h2>KeepTheTrack</h2>
+		</div>
 
-            <div>
-                <input type="checkbox" name="author" id="author-box" role="switch">
-                <label for="author" data-i18n="extensionByAuthor">By author</label>
-            </div>
+		<fieldset>
+			<legend data-i18n="extensionFilters">Filters</legend>
 
-            <div>
-                <input type="checkbox" name="name" id="name-box" role="switch">
-                <label for="name" data-i18n="extensionByName">By name</label>
-                <input type="text" id="name-text-box" class="hidden fit">
-            </div>
-        </fieldset>
+			<div>
+				<input type="checkbox" name="author" id="author-box" role="switch" />
+				<label for="author" data-i18n="extensionByAuthor">By author</label>
+			</div>
 
-        <fieldset>
-            <legend data-i18n="extensionModes">Viewing Modes</legend>
+			<div>
+				<input type="checkbox" name="name" id="name-box" role="switch" />
+				<label for="name" data-i18n="extensionByName">By name</label>
+				<input type="text" id="name-text-box" class="hidden fit" />
+			</div>
+		</fieldset>
 
-            <div>
-                <input type="checkbox" name="sleep" id="sleep-box" role="switch">
-                <label for="sleep" data-i18n="extensionSleepMode">Sleep Mode</label>
-            </div>
-        </fieldset>
+		<fieldset>
+			<legend data-i18n="extensionModes">Viewing Modes</legend>
 
-        <fieldset id="next-video-fieldset" class="hidden">
-            <legend data-i18n="extensionNextVideo">Next video</legend>
+			<div>
+				<input type="checkbox" name="sleep" id="sleep-box" role="switch" />
+				<label for="sleep" data-i18n="extensionSleepMode">Sleep Mode</label>
+			</div>
+		</fieldset>
 
-            <div class="container" id="video-holder"></div>
-        </fieldset>
+		<fieldset id="next-video-fieldset" class="hidden">
+			<legend data-i18n="extensionNextVideo">Next video</legend>
 
-        <footer>
-            <div class="about">
-                <a href="https://github.com/fralorange/KeepTheTrack" target="_blank" rel="noopener noreferrer">
-                    <img id="github-logo" src="../../assets/vendor/github/github-mark.svg" alt="GitHub" title="GitHub" width="20" height="20">
-                </a>
-            </div>
-        </footer>
-    </body>
-    <script src="../utils/i18n.js"></script>
-    <script src="popup.js"></script>
+			<div class="container" id="video-holder"></div>
+		</fieldset>
+
+		<footer>
+			<div class="about">
+				<a
+					href="https://github.com/fralorange/KeepTheTrack"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<img
+						id="github-logo"
+						src="../../assets/vendor/github/github-mark.svg"
+						alt="GitHub"
+						title="GitHub"
+						width="20"
+						height="20"
+					/>
+				</a>
+			</div>
+		</footer>
+	</body>
+	<script src="../utils/i18n.js"></script>
+	<script src="popup.js"></script>
 </html>

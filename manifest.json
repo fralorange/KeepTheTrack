@@ -1,41 +1,41 @@
 {
-    "manifest_version": 3,
-    "name": "__MSG_extensionName__",
-    "description": "__MSG_extensionDescription__",
-    "version": "2.1.1",
-    "permissions": ["storage", "tabs", "webNavigation"],
-    "host_permissions": ["https://*.youtube.com/*"],
-    "background": {
-        "service_worker": "src/background/background.js"
-    },
-    "options_page": "src/options/options.html",
-    "content_scripts": [
-        {
-            "matches": ["https://*.youtube.com/*"],
-            "js": [
-                "src/utils/utils.js",
-                "src/utils/observers.js",
-                "src/content/features/sleepOverlay.js",
-                "src/content/features/autoplayOverride.js",
-                "src/content/content.js"
-            ]
-        }
-    ],
-    "default_locale": "en",
-    "action": {
-        "default_icon": {
-            "16": "assets/icons/logo16.png",
-            "24": "assets/icons/logo24.png",
-            "32": "assets/icons/logo32.png"
-        },
-        "default_title": "KeepTheTrack",
-        "default_popup": "src/popup/popup.html"
-    },
-    "icons": {
-        "16": "assets/icons/logo16.png",
-        "24": "assets/icons/logo24.png",
-        "32": "assets/icons/logo32.png",
-        "48": "assets/icons/logo48.png",
-        "128": "assets/icons/logo128.png"
-    }
+	"manifest_version": 3,
+	"name": "__MSG_extensionName__",
+	"description": "__MSG_extensionDescription__",
+	"version": "2.2.0",
+	"permissions": ["storage", "tabs", "webNavigation"],
+	"host_permissions": ["https://*.youtube.com/*"],
+	"background": {
+		"service_worker": "src/background/background.js"
+	},
+	"options_page": "src/options/options.html",
+	"content_scripts": [
+		{
+			"matches": ["https://*.youtube.com/*"],
+			"js": [
+				"src/utils/utils.js",
+				"src/utils/observers.js",
+				"src/content/features/sleepOverlay.js",
+				"src/content/features/autoplayOverride.js",
+				"src/content/content.js"
+			]
+		}
+	],
+	"default_locale": "en",
+	"action": {
+		"default_icon": {
+			"16": "assets/icons/logo16.png",
+			"24": "assets/icons/logo24.png",
+			"32": "assets/icons/logo32.png"
+		},
+		"default_title": "KeepTheTrack",
+		"default_popup": "src/popup/popup.html"
+	},
+	"icons": {
+		"16": "assets/icons/logo16.png",
+		"24": "assets/icons/logo24.png",
+		"32": "assets/icons/logo32.png",
+		"48": "assets/icons/logo48.png",
+		"128": "assets/icons/logo128.png"
+	}
 }
