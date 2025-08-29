@@ -71,7 +71,7 @@ async function initAutoplayOverride() {
 	currentAuthor = (await waitForElement("#upload-info a")).innerText;
 	youtubeContents = Array.from(cards).map((card) => {
 		const titleEl = card.querySelector(
-			"a.yt-lockup-metadata-view-model-wiz__title"
+			"a.yt-lockup-metadata-view-model__title"
 		);
 		const title = titleEl?.textContent.trim() || null;
 
@@ -80,7 +80,7 @@ async function initAutoplayOverride() {
 		);
 
 		const authorEl = card.querySelector(
-			".yt-content-metadata-view-model-wiz__metadata-row > span.yt-core-attributed-string"
+			".yt-content-metadata-view-model__metadata-row > span.yt-core-attributed-string"
 		);
 		const author = authorEl?.textContent?.trim() || null;
 
