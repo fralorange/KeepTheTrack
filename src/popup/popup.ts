@@ -80,9 +80,17 @@ function requestNextVideo() {
  * Sets up a message listener to handle incoming messages from the content script.
  */
 function setupMessagesHandler() {
-	chrome.runtime.onMessage.addListener((message: Message) => {
+	chrome.runtime.onMessage.addListener((message: Message, sender) => {
 		if (message.action === "updateNextVideo") {
-			pasteNextVideo(message.nextVideoHTML);
+			chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+				const activeTabId = tabs?.[0]?.id;
+
+				if (sender.tab?.id !== activeTabId) {
+					return;
+				}
+
+				pasteNextVideo(message.nextVideoHTML);
+			});
 		}
 	});
 }
