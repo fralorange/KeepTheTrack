@@ -1,8 +1,18 @@
 body {
 	min-width: 200px;
 	max-width: 400px;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-family:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Open Sans",
+		"Helvetica Neue",
+		sans-serif;
 	background-color: white;
 	color: black;
 }
@@ -58,7 +68,8 @@ input[role="switch"]::before {
 	transition: inherit;
 }
 
-input[type="text"] {
+input[type="text"],
+input:not([type]) {
 	margin-top: 2.5%;
 	box-shadow: none;
 	border: 1px solid rgba(128, 128, 128, 0.5);
@@ -72,7 +83,9 @@ footer {
 
 footer #github-logo {
 	opacity: 0.2;
-	transition: opacity 0.2s, transform 0.2s;
+	transition:
+		opacity 0.2s,
+		transform 0.2s;
 }
 
 footer #github-logo:hover,
@@ -152,10 +165,15 @@ footer:hover #github-logo {
 	position: relative;
 }
 
-#video-holder img {
+#video-holder a {
+	width: 100% !important;
 	display: block;
-	width: 100%;
+}
+
+#video-holder img {
+	width: 100% !important;
 	height: auto;
+	display: block;
 	border: 2px solid rgba(128, 128, 128, 0.5);
 }
 
@@ -163,6 +181,10 @@ footer:hover #github-logo {
 #video-holder .ytd-thumbnail-overlay-time-status-renderer,
 #video-holder .ytd-thumbnail-overlay-now-playing-renderer {
 	display: none !important;
+}
+
+#video-holder .ytThumbnailViewModelImage {
+	width: 100% !important;
 }
 
 #github-logo {
@@ -186,7 +208,8 @@ footer:hover #github-logo {
 		color: #f0f0f0;
 	}
 
-	input[type="text"] {
+	input[type="text"],
+	input:not([type]) {
 		background-color: #343434;
 		color: #f0f0f0;
 	}

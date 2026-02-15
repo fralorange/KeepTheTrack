@@ -1,16 +1,21 @@
-let debounceTimeout;
+import { waitForElement } from "./elements";
+
+let debounceId: number | undefined = undefined;
 
 /**
  * Starts an observer for the playlist panel to detect when it becomes visible.
  * @param {*} onPlaylistVisible - Callback function to execute when the playlist panel becomes visible.
  * @returns {MutationObserver|null} - The MutationObserver instance or null if the playlist panel is not found.
  */
-function startPlaylistObserver(onPlaylistVisible) {
+export function startPlaylistObserver(
+	onPlaylistVisible: () => void,
+): MutationObserver | null {
 	let playlistObserver = new MutationObserver((mutations) => {
 		for (let mut of mutations) {
 			if (
 				mut.type === "attributes" &&
 				mut.target.nodeType === Node.ELEMENT_NODE &&
+				mut.target instanceof Element &&
 				mut.target.tagName.toLowerCase() === "ytd-playlist-panel-renderer"
 			) {
 				onPlaylistVisible();
@@ -34,9 +39,9 @@ function startPlaylistObserver(onPlaylistVisible) {
  * Debounces the recommendation change event to avoid excessive calls.
  * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
  */
-function debouncedRecommendationChanged(onRecommendationsChanged) {
-	clearTimeout(debounceTimeout);
-	debounceTimeout = setTimeout(() => {
+function debouncedRecommendationChanged(onRecommendationsChanged: () => void) {
+	clearTimeout(debounceId);
+	debounceId = setTimeout(() => {
 		onRecommendationsChanged();
 	}, 200);
 }
@@ -46,7 +51,9 @@ function debouncedRecommendationChanged(onRecommendationsChanged) {
  * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
  * @returns
  */
-async function startRecommendationsObserver(onRecommendationsChanged) {
+export async function startRecommendationsObserver(
+	onRecommendationsChanged: () => void,
+) {
 	let cardName = "yt-lockup-view-model";
 	let recommendationsObserver = new MutationObserver((mutations) => {
 		let changed = false;
@@ -55,6 +62,7 @@ async function startRecommendationsObserver(onRecommendationsChanged) {
 				mut.addedNodes.forEach((node) => {
 					if (
 						node.nodeType === Node.ELEMENT_NODE &&
+						node instanceof Element &&
 						(node.tagName.toLowerCase() === cardName ||
 							node.querySelector(cardName))
 					) {
@@ -64,7 +72,8 @@ async function startRecommendationsObserver(onRecommendationsChanged) {
 				mut.removedNodes.forEach((node) => {
 					if (
 						node.nodeType === Node.ELEMENT_NODE &&
-						(node.tagName.toLowerCase === cardName ||
+						node instanceof Element &&
+						(node.tagName.toLowerCase() === cardName ||
 							node.querySelector(cardName))
 					) {
 						changed = true;

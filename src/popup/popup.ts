@@ -1,34 +1,25 @@
-const nextVideoFieldset = document.getElementById("next-video-fieldset");
-const videoHolder = document.querySelector("div#video-holder.container");
-const sleepCheckBox = document.getElementById("sleep-box");
-const authorCheckBox = document.getElementById("author-box");
-const nameCheckBox = document.getElementById("name-box");
-const nameTextBox = document.getElementById("name-text-box");
-let nameTextBoxDebounce;
-let nextVideoHTML;
+import "./popup.css";
+import "../utils/i18n";
+import Data from "../types/data";
+import { Message, ResponseMessage } from "../types/messages";
+import { getElement, getSelector, toggleVisibility } from "../utils/elements";
+import { DEFAULT_FILTERS } from "../types/filters";
 
-/**
- * Toggles the visibility of an element and executes a callback if provided.
- * @param {*} element - The DOM element to toggle visibility for.
- * @param {*} visible - A boolean indicating whether the element should be visible or not.
- * @param {*} callback - An optional callback function to execute when the element is hidden.
- */
-function toggleVisibility(element, visible, callback) {
-	if (visible) {
-		element.classList.remove("hidden");
-	} else {
-		element.classList.add("hidden");
-		if (typeof callback == "function") {
-			callback();
-		}
-	}
-}
+const nextVideoFieldset = getElement("next-video-fieldset");
+const videoHolder = getSelector("div#video-holder.container");
+const sleepCheckBox = getElement<HTMLInputElement>("sleep-box");
+const authorCheckBox = getElement<HTMLInputElement>("author-box");
+const nameCheckBox = getElement<HTMLInputElement>("name-box");
+const nameTextBox = getElement<HTMLInputElement>("name-text-box");
+
+let nameTextBoxDebounceId: number | undefined = undefined;
+let nextVideoHTML: string | null = null;
 
 /**
  * Normalizes the YouTube card href by ensuring it points to the full URL.
  */
 function normalizeYTCardHref() {
-	const link = videoHolder.querySelector('a[href^="/watch"]');
+	const link = videoHolder?.querySelector('a[href^="/watch"]');
 	if (!link) return;
 
 	const thumbVM = link.querySelector("yt-thumbnail-view-model");
@@ -41,7 +32,7 @@ function normalizeYTCardHref() {
 	}
 
 	const relHref = link.getAttribute("href");
-	if (relHref.startsWith("/watch")) {
+	if (relHref?.startsWith("/watch")) {
 		link.setAttribute("href", "https://www.youtube.com" + relHref);
 		link.setAttribute("target", "_blank");
 	}
@@ -50,30 +41,38 @@ function normalizeYTCardHref() {
 /**
  * Pastes the next video HTML into the video holder and updates the visibility of the next video fieldset.
  */
-function pasteNextVideo() {
+function pasteNextVideo(nextVideoHTMLParam: string | null) {
+	if (nextVideoHTML === nextVideoHTMLParam) return;
+
+	nextVideoHTML = nextVideoHTMLParam;
+	toggleVisibility(nextVideoFieldset, !!nextVideoHTML);
+	if (nextVideoHTML) {
+		videoHolder.innerHTML = nextVideoHTML;
+		normalizeYTCardHref();
+	} else {
+		videoHolder.innerHTML = "";
+	}
+}
+
+/**
+ * Requests next video from the current active tab.
+ */
+function requestNextVideo() {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-		if (!tabs || !tabs[0]) {
+		console.log(tabs);
+		if (!tabs || !tabs[0] || !tabs[0].id) {
 			return;
 		}
 		const tabId = tabs[0].id;
 
-		chrome.tabs.sendMessage(
-			tabId,
-			{ action: "requestNextVideo" },
-			(response) => {
-				if (chrome.runtime.lastError || nextVideoHTML === response?.data) {
-					return;
-				}
-				nextVideoHTML = response?.data;
-				toggleVisibility(nextVideoFieldset, nextVideoHTML);
-				if (nextVideoHTML) {
-					videoHolder.innerHTML = nextVideoHTML;
-					normalizeYTCardHref();
-				} else {
-					videoHolder.innerHTML = "";
-				}
+		const message: Message = { action: "requestNextVideo" };
+
+		chrome.tabs.sendMessage(tabId, message, (response: ResponseMessage) => {
+			if (chrome.runtime.lastError) {
+				return;
 			}
-		);
+			pasteNextVideo(response.nextVideoHTML);
+		});
 	});
 }
 
@@ -81,8 +80,8 @@ function pasteNextVideo() {
  * Sets up a message listener to handle incoming messages from the content script.
  */
 function setupMessagesHandler() {
-	chrome.runtime.onMessage.addListener((message, _sender, _response) => {
-		if (message.action === "nextVideoUpdated") {
+	chrome.runtime.onMessage.addListener((message: Message) => {
+		if (message.action === "updateNextVideo") {
 			pasteNextVideo(message.nextVideoHTML);
 		}
 	});
@@ -92,24 +91,24 @@ function setupMessagesHandler() {
  * Sets up listeners for filter checkboxes and text input.
  */
 function setupFilterListeners() {
-	authorCheckBox.addEventListener("change", (e) => {
-		const isChecked = e.currentTarget.checked;
-		chrome.storage.sync.get("filters", (data) => {
+	authorCheckBox?.addEventListener("change", (e) => {
+		const isChecked = (e.currentTarget as HTMLInputElement).checked;
+		chrome.storage.sync.get("filters", (data: Data) => {
 			const filters = data.filters;
 			filters.byAuthor = isChecked;
 			chrome.storage.sync.set({ filters });
 		});
 	});
 
-	nameCheckBox.addEventListener("change", (e) => {
-		const isChecked = e.currentTarget.checked;
+	nameCheckBox?.addEventListener("change", (e) => {
+		const isChecked = (e.currentTarget as HTMLInputElement).checked;
 		// Visual
 		toggleVisibility(nameTextBox, isChecked, () => {
 			nameTextBox.value = "";
 			nameTextBox.dispatchEvent(new Event("input", { bubbles: true }));
 		});
 		// Logic
-		chrome.storage.sync.get("filters", (data) => {
+		chrome.storage.sync.get("filters", (data: Data) => {
 			const filters = data.filters;
 			filters.byName.enabled = isChecked;
 			chrome.storage.sync.set({ filters });
@@ -117,12 +116,12 @@ function setupFilterListeners() {
 	});
 
 	nameTextBox.addEventListener("input", (e) => {
-		clearTimeout(nameTextBoxDebounce);
+		clearTimeout(nameTextBoxDebounceId);
 
-		const targetValue = e.currentTarget.value;
+		const targetValue = (e.currentTarget as HTMLInputElement).value;
 
-		nameTextBoxDebounce = setTimeout(() => {
-			chrome.storage.sync.get("filters", (data) => {
+		nameTextBoxDebounceId = setTimeout(() => {
+			chrome.storage.sync.get("filters", (data: Data) => {
 				const filters = data.filters;
 				filters.byName.value = targetValue;
 				chrome.storage.sync.set({ filters });
@@ -136,10 +135,10 @@ function setupFilterListeners() {
  */
 function setupModeListeners() {
 	sleepCheckBox.addEventListener("change", (e) => {
-		const isChecked = e.currentTarget.checked;
-		chrome.storage.sync.get("modes", (data) => {
+		const isChecked = (e.currentTarget as HTMLInputElement).checked;
+		chrome.storage.sync.get("modes", (data: Data) => {
 			const modes = data.modes;
-			modes.sleep = isChecked;
+			modes.sleepMode = isChecked;
 			chrome.storage.sync.set({ modes });
 		});
 	});
@@ -159,17 +158,11 @@ function setupButtonListener() {
 }
 
 document.addEventListener("DOMContentLoaded", async (_e) => {
-	await new Promise((resolve) => {
-		chrome.storage.sync.get(["filters", "modes"], (data) => {
+	await new Promise<void>((resolve) => {
+		chrome.storage.sync.get(["filters", "modes"], (data: Data) => {
 			if (!data.filters) {
 				chrome.storage.sync.set({
-					filters: {
-						byAuthor: false,
-						byName: {
-							enabled: false,
-							value: "",
-						},
-					},
+					filters: DEFAULT_FILTERS,
 				});
 			} else {
 				const filters = data.filters;
@@ -182,20 +175,20 @@ document.addEventListener("DOMContentLoaded", async (_e) => {
 			if (!data.modes) {
 				chrome.storage.sync.set({
 					modes: {
-						sleep: false,
+						sleepMode: false,
 					},
 				});
 			} else {
 				const modes = data.modes;
-				sleepCheckBox.checked = modes.sleep;
+				sleepCheckBox.checked = modes.sleepMode;
 			}
 
 			resolve();
 		});
 	});
 
-	await new Promise((resolve) => {
-		pasteNextVideo();
+	await new Promise<void>((resolve) => {
+		requestNextVideo();
 		resolve();
 	});
 
