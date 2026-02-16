@@ -1,6 +1,7 @@
 import { Message, ResponseMessage } from "../types/messages";
 import { createStore } from "../types/store";
 import {
+	RecommendationsObserver,
 	startPlaylistObserver,
 	startRecommendationsObserver,
 } from "../utils/observers";
@@ -17,14 +18,18 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	let sleepOverlay: SleepOverlay | null = null;
 
 	let playlistObserver: MutationObserver | null = null;
-	let recommendationsObserver: MutationObserver | null = null;
-	let isInitializing = false;
+	let recommendationsObserver: RecommendationsObserver | null = null;
+
+	let initPromise: Promise<void> | null = null; // Mutex for initialization
 
 	/**
 	 * Sets up all the features of the extension.
 	 * @returns {Promise<void>}
 	 */
 	const setupFeatures = async (): Promise<void> => {
+		autoplayOverride?.destroy();
+		sleepOverlay?.destroy();
+
 		autoplayOverride = await createAutoplayOverride(store);
 		sleepOverlay = await createSleepOverlay();
 	};
@@ -49,7 +54,7 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	const setupMessagesHandler = () => {
 		chrome.runtime.onMessage.addListener((message: Message) => {
 			if (message.action === "requestTabUpdate") {
-				setupFeatures();
+				init();
 			}
 		});
 
@@ -70,27 +75,30 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	};
 
 	/**
-	 * Initializes the content script by setting up observers and handlers.
+	 * Initializes the content script by setting up observers and features.
+	 * Uses a mutex to prevent concurrent initializations.
+	 * @returns {Promise<void>}
 	 */
-	const init = async () => {
-		if (isInitializing) return;
-		isInitializing = true;
+	const init = async (): Promise<void> => {
+		if (initPromise) return initPromise;
 
-		try {
+		initPromise = (async () => {
 			playlistObserver?.disconnect();
-			recommendationsObserver?.disconnect();
+			recommendationsObserver?.destroy();
 
 			await setupFeatures();
 
 			playlistObserver = startPlaylistObserver(async () => {
 				await autoplayOverride?.applyFilters();
 			});
+
 			recommendationsObserver = await startRecommendationsObserver(async () => {
 				await autoplayOverride?.applyFilters();
 			});
-		} finally {
-			isInitializing = false;
-		}
+		})();
+
+		await initPromise;
+		initPromise = null;
 	};
 
 	/**

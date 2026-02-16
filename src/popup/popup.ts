@@ -59,7 +59,6 @@ function pasteNextVideo(nextVideoHTMLParam: string | null) {
  */
 function requestNextVideo() {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-		console.log(tabs);
 		if (!tabs || !tabs[0] || !tabs[0].id) {
 			return;
 		}

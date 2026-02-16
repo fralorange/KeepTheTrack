@@ -1,6 +1,12 @@
 import { waitForElement } from "./elements";
 
-let debounceId: number | undefined = undefined;
+/**
+ * Defines the structure of the recommendations observer, which includes the MutationObserver instance and a destroy function to clean up the observer when it's no longer needed.
+ */
+export type RecommendationsObserver = {
+	observer: MutationObserver;
+	destroy: () => void;
+};
 
 /**
  * Starts an observer for the playlist panel to detect when it becomes visible.
@@ -36,24 +42,15 @@ export function startPlaylistObserver(
 }
 
 /**
- * Debounces the recommendation change event to avoid excessive calls.
- * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
- */
-function debouncedRecommendationChanged(onRecommendationsChanged: () => void) {
-	clearTimeout(debounceId);
-	debounceId = setTimeout(() => {
-		onRecommendationsChanged();
-	}, 200);
-}
-
-/**
  * Starts an observer for the recommendations section to detect changes in video cards.
  * @param {*} onRecommendationsChanged - Callback function to execute when recommendations change.
- * @returns
+ * @returns {Promise<RecommendationsObserver|null>} - A promise that resolves to an object containing the MutationObserver instance and a destroy function, or null if the recommendations container is not found.
  */
 export async function startRecommendationsObserver(
 	onRecommendationsChanged: () => void,
-) {
+): Promise<RecommendationsObserver | null> {
+	let debounceId: number | undefined = undefined;
+
 	let cardName = "yt-lockup-view-model";
 	let recommendationsObserver = new MutationObserver((mutations) => {
 		let changed = false;
@@ -83,7 +80,10 @@ export async function startRecommendationsObserver(
 		}
 
 		if (changed) {
-			debouncedRecommendationChanged(onRecommendationsChanged);
+			clearTimeout(debounceId);
+			debounceId = setTimeout(() => {
+				onRecommendationsChanged();
+			}, 200);
 		}
 	});
 
@@ -99,5 +99,12 @@ export async function startRecommendationsObserver(
 		attributes: true,
 		attributeFilter: ["src"],
 	});
-	return recommendationsObserver;
+
+	return {
+		observer: recommendationsObserver,
+		destroy: () => {
+			recommendationsObserver.disconnect();
+			clearTimeout(debounceId);
+		},
+	};
 }

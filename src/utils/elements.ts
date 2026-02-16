@@ -3,16 +3,18 @@
  * @param {*} selector The CSS selector for the element to wait for.
  * @returns {Promise} A promise that resolves with the element when it is found.
  */
-export function waitForElement(selector: string): Promise<any> {
+export function waitForElement<T extends HTMLElement>(
+	selector: string,
+): Promise<T | null> {
 	return new Promise((resolve) => {
 		if (document.querySelector(selector)) {
-			return resolve(document.querySelector(selector));
+			return resolve(document.querySelector<T>(selector));
 		}
 
-		const observer = new MutationObserver((mutations) => {
-			if (document.querySelector(selector)) {
+		const observer = new MutationObserver(() => {
+			if (document.querySelector<T>(selector)) {
 				observer.disconnect();
-				resolve(document.querySelector(selector));
+				resolve(document.querySelector<T>(selector));
 			}
 		});
 
@@ -32,12 +34,24 @@ export function waitForElement(selector: string): Promise<any> {
  */
 export function waitForElements(
 	selector: string,
-	debounceTime: any = 200,
-	maxWait: any = 5000,
+	debounceTime: number = 200,
+	maxWait: number = 5000,
 ): Promise<Element[]> {
 	return new Promise((resolve) => {
 		let lastCount = 0;
 		let debounceId: number | undefined = undefined;
+		let maxWaitId: number | undefined = undefined;
+
+		const cleanup = () => {
+			observer.disconnect();
+			clearTimeout(debounceId);
+			clearTimeout(maxWaitId);
+		};
+
+		const finish = () => {
+			cleanup();
+			resolve(Array.from(document.querySelectorAll(selector)));
+		};
 
 		const check = () => {
 			const elements = document.querySelectorAll(selector);
@@ -47,13 +61,15 @@ export function waitForElements(
 				lastCount = currentCount;
 
 				clearTimeout(debounceId);
-				debounceId = setTimeout(() => {
-					observer.disconnect();
-					clearTimeout(debounceId);
-					resolve(Array.from(document.querySelectorAll(selector)));
+				debounceId = window.setTimeout(() => {
+					finish();
 				}, debounceTime);
 			}
 		};
+
+		maxWait = window.setTimeout(() => {
+			finish();
+		}, maxWait);
 
 		check();
 

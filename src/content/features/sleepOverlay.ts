@@ -19,6 +19,7 @@ interface VisualOverlay {
  */
 export interface SleepOverlay {
 	applyOverlay: () => Promise<void>;
+	destroy: () => void;
 }
 
 /**
@@ -109,19 +110,16 @@ export async function createSleepOverlay(): Promise<SleepOverlay> {
 	};
 
 	const appendVisualOverlay = (): void => {
-		if (document.fullscreenElement && visualOverlay) {
-			return;
-		}
+		const playerContent = document.querySelector<HTMLElement>(
+			'#player-container[role="complementary"]',
+		);
+		if (!playerContent) return;
 
 		if (visualOverlay) {
 			visualOverlay.destroyOverlay();
 			visualOverlay = null;
 		}
 
-		const playerContent = document.querySelector<HTMLElement>(
-			'#player-container[role="complementary"]',
-		);
-		if (!playerContent) return;
 		playerContent.style.position = "absolute";
 
 		visualOverlay = createVisualOverlay();
@@ -160,5 +158,6 @@ export async function createSleepOverlay(): Promise<SleepOverlay> {
 
 	return {
 		applyOverlay,
+		destroy: removeVisualOverlay,
 	};
 }

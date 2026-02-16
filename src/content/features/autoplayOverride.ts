@@ -14,10 +14,19 @@ interface YouTubeContent {
 }
 
 /**
+ * Defines the structure of the YouTube information that being used for filtering the next video.
+ */
+interface YouTubeInfo {
+	author: string;
+	youtubeContents: YouTubeContent[];
+}
+
+/**
  * Defines the structure of the autoplay override feature.
  */
 export interface AutoplayOverride {
 	applyFilters: () => Promise<void>;
+	destroy: () => void;
 }
 
 /**
@@ -28,8 +37,10 @@ export async function createAutoplayOverride(
 	store: Store,
 ): Promise<AutoplayOverride> {
 	const youtubePlayer = document.getElementsByClassName("video-stream")[0];
-	const cards = await waitForElements("yt-lockup-view-model");
 
+	/**
+	 * Handles the "ended" event of the YouTube player by clicking the next video if it exists.
+	 */
 	const onYouTubeEnded = () => {
 		const next = store.getNextVideo();
 		if (next) {
@@ -37,10 +48,16 @@ export async function createAutoplayOverride(
 		}
 	};
 
-	let currentAuthor: string = (await waitForElement("#upload-info a"))
-		.innerText;
-	let youtubeContents: YouTubeContent[] = Array.from(cards).map<YouTubeContent>(
-		(card) => {
+	if (youtubePlayer) {
+		youtubePlayer.removeEventListener("ended", onYouTubeEnded);
+		youtubePlayer.addEventListener("ended", onYouTubeEnded);
+	}
+
+	const getYouTubeInfo = async (): Promise<YouTubeInfo> => {
+		const youtubeCards = await waitForElements("yt-lockup-view-model");
+		let youtubeContents: YouTubeContent[] = Array.from(
+			youtubeCards,
+		).map<YouTubeContent>((card) => {
 			const titleEl = card.querySelector(
 				"a.yt-lockup-metadata-view-model__title",
 			);
@@ -57,19 +74,19 @@ export async function createAutoplayOverride(
 			const author = authorEl?.textContent?.trim() || null;
 
 			return { title, author, urlEl };
-		},
-	);
+		});
 
-	if (youtubePlayer) {
-		youtubePlayer.removeEventListener("ended", onYouTubeEnded);
-		youtubePlayer.addEventListener("ended", onYouTubeEnded);
-	}
+		let author: string =
+			(await waitForElement("#upload-info a"))?.innerText ?? "";
+
+		return { author, youtubeContents };
+	};
 
 	/**
 	 * Applies the override filters to the video list and updates the next video element.
 	 * @returns {Promise<void>}
 	 */
-	async function applyFilters(): Promise<void> {
+	const applyFilters = async (): Promise<void> => {
 		const updateNextVideo = (value: HTMLElement | null) => {
 			store.setNextVideo(value);
 
@@ -80,55 +97,58 @@ export async function createAutoplayOverride(
 			chrome.runtime.sendMessage(message);
 		};
 
-		return new Promise<void>((resolve) => {
-			const playlistPanel = document.querySelector(
-				".ytd-watch-flexy ytd-playlist-panel-renderer",
-			);
-
-			if (playlistPanel && !playlistPanel.hasAttribute("hidden")) {
-				updateNextVideo(null);
-				return resolve();
-			}
-
-			chrome.storage.sync.get("filters", (data: Data) => {
-				const filters = data.filters || DEFAULT_FILTERS;
-
-				const predicates: Array<(item: YouTubeContent) => boolean> = [];
-
-				if (filters.byAuthor) {
-					predicates.push((item) => item.author === currentAuthor);
-				}
-
-				if (
-					filters.byName.enabled &&
-					filters.byName.value.trim().toLowerCase() !== ""
-				) {
-					const pattern = filters.byName.value.trim().toLowerCase();
-
-					predicates.push(
-						(item) => item.title?.toLowerCase().includes(pattern) ?? false,
-					);
-				}
-
-				const filteredContents =
-					predicates.length === 0
-						? []
-						: youtubeContents.filter((content) =>
-								predicates.every((predicate) => predicate(content)),
-							);
-
-				updateNextVideo(
-					filteredContents.length > 0 ? filteredContents[0].urlEl : null,
-				);
-
-				resolve();
+		const getFilters = (): Promise<Data["filters"]> =>
+			new Promise((resolve) => {
+				chrome.storage.sync.get("filters", (data: Data) => {
+					resolve(data.filters || DEFAULT_FILTERS);
+				});
 			});
-		});
-	}
+
+		const playlistPanel = document.querySelector(
+			".ytd-watch-flexy ytd-playlist-panel-renderer",
+		);
+
+		if (playlistPanel && !playlistPanel.hasAttribute("hidden")) {
+			updateNextVideo(null);
+			return;
+		}
+
+		const filters = await getFilters();
+		const { author, youtubeContents } = await getYouTubeInfo();
+
+		const predicates: Array<(item: YouTubeContent) => boolean> = [];
+
+		if (filters.byAuthor) {
+			predicates.push((item) => item.author === author);
+		}
+
+		if (
+			filters.byName.enabled &&
+			filters.byName.value.trim().toLowerCase() !== ""
+		) {
+			const pattern = filters.byName.value.trim().toLowerCase();
+
+			predicates.push(
+				(item) => item.title?.toLowerCase().includes(pattern) ?? false,
+			);
+		}
+
+		const filteredContents =
+			predicates.length === 0
+				? []
+				: youtubeContents.filter((content) =>
+						predicates.every((predicate) => predicate(content)),
+					);
+
+		updateNextVideo(
+			filteredContents.length > 0 ? filteredContents[0].urlEl : null,
+		);
+	};
 
 	await applyFilters();
 
 	return {
 		applyFilters,
+		destroy: () => youtubePlayer.removeEventListener("ended", onYouTubeEnded),
 	};
 }
