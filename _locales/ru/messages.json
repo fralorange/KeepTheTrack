@@ -39,6 +39,11 @@
 		"description": "Фильтр по имени."
 	},
 
+	"extensionByNamePlaceholder": {
+		"message": "Название видео...",
+		"description": "Заглушка для области ввода фильтра"
+	},
+
 	"extensionByNameDescription": {
 		"message": "Фильтр видео по названию существующего видео.",
 		"description": "Описание для фильтрации по имени."
@@ -137,5 +142,30 @@
 	"extensionOptionImportError": {
 		"message": "При импорте файла произошла ошибка.",
 		"description": "Сообщение об ошибке, отображаемое при возникновении проблемы с импортом настроек."
+	},
+
+	"extensionShuffle": {
+		"message": "Вперемешку",
+		"description": "Фильтр по случайному порядку."
+	},
+
+	"extensionShortsMode": {
+		"message": "Режим Shorts",
+		"description": "Название режима просмотра коротких видео."
+	},
+
+	"extensionFocusMode": {
+		"message": "Режим фокуса",
+		"description": "Описание режима фокусировки."
+	},
+
+	"extensionNextVideoTitle": {
+		"message": "Пустое название",
+		"description": "Заглушка для названия следующего видео."
+	},
+
+	"extensionNextVideoAuthor": {
+		"message": "Неизвестный автор",
+		"description": "Заглушка для автора следующего видео."
 	}
 }

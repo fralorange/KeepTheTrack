@@ -1,11 +1,11 @@
+import { PopupVideoStructure } from "../types/video";
+
 /**
  * Waits for an element to be present in the DOM.
  * @param {*} selector The CSS selector for the element to wait for.
  * @returns {Promise} A promise that resolves with the element when it is found.
  */
-export function waitForElement<T extends HTMLElement>(
-	selector: string,
-): Promise<T | null> {
+export function waitForElement<T extends HTMLElement>(selector: string): Promise<T | null> {
 	return new Promise((resolve) => {
 		if (document.querySelector(selector)) {
 			return resolve(document.querySelector<T>(selector));
@@ -125,4 +125,30 @@ export function toggleVisibility(
 			callback();
 		}
 	}
+}
+
+/**
+ * Decomposes video card into popup video structure.
+ * @param element The DOM element that being decomposed.
+ * @returns {PopupVideoStructure | null}
+ */
+export function decomposeVideo(element: HTMLElement | null): PopupVideoStructure {
+	const link = element?.querySelector("a");
+	const href = link?.href ?? null;
+
+	const img = link?.querySelector("img");
+	const src = img?.src ?? null;
+
+	const heading = element?.querySelector("h3");
+	const title = heading?.title ?? null;
+
+	const span = element?.querySelector("div > span");
+	const author = span?.textContent ?? null;
+
+	return {
+		videoHref: href,
+		videoSrc: src,
+		videoTitle: title,
+		videoAuthor: author,
+	};
 }

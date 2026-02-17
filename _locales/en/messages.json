@@ -39,6 +39,11 @@
 		"description": "Filter by name."
 	},
 
+	"extensionByNamePlaceholder": {
+		"message": "Video title...",
+		"description": "Placeholder for filter's input"
+	},
+
 	"extensionByNameDescription": {
 		"message": "Filter videos by the name of the existing video.",
 		"description": "Description for filtering by name."
@@ -137,5 +142,30 @@
 	"extensionOptionImportError": {
 		"message": "An error occurred while importing the file.",
 		"description": "Error message displayed when there is an issue importing settings."
+	},
+
+	"extensionShuffle": {
+		"message": "Shuffle",
+		"description": "Label for the shuffle option."
+	},
+
+	"extensionShortsMode": {
+		"message": "Shorts Mode",
+		"description": "Shorts Mode Name."
+	},
+
+	"extensionFocusMode": {
+		"message": "Focus Mode",
+		"description": "Focus Mode Name."
+	},
+
+	"extensionNextVideoTitle": {
+		"message": "Empty title",
+		"description": "Placeholder for next video title."
+	},
+
+	"extensionNextVideoAuthor": {
+		"message": "Unknown author",
+		"description": "Placeholder for next video author."
 	}
 }

@@ -1,14 +1,8 @@
 import { Message, ResponseMessage } from "../types/messages";
 import { createStore } from "../types/store";
-import {
-	RecommendationsObserver,
-	startPlaylistObserver,
-	startRecommendationsObserver,
-} from "../utils/observers";
-import {
-	AutoplayOverride,
-	createAutoplayOverride,
-} from "./features/autoplayOverride";
+import { decomposeVideo } from "../utils/elements";
+import { RecommendationsObserver, startPlaylistObserver, startRecommendationsObserver } from "../utils/observers";
+import { AutoplayOverride, createAutoplayOverride } from "./features/autoplayOverride";
 import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 
 (() => {
@@ -59,16 +53,13 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 		});
 
 		chrome.runtime.onMessage.addListener(
-			(
-				message: Message,
-				_sender,
-				sendResponse: (response: ResponseMessage) => void,
-			) => {
+			(message: Message, _sender, sendResponse: (response: ResponseMessage) => void) => {
 				if (message.action === "requestNextVideo") {
-					let response: ResponseMessage = {
-						nextVideoHTML: store.getNextVideo()?.outerHTML ?? null,
-					};
-					sendResponse(response);
+					let nextVideo = store.getNextVideo();
+
+					let popupVideo = decomposeVideo(nextVideo);
+
+					sendResponse(popupVideo);
 				}
 			},
 		);

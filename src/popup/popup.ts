@@ -2,55 +2,83 @@ import "./popup.css";
 import "../utils/i18n";
 import Data from "../types/data";
 import { Message, ResponseMessage } from "../types/messages";
-import { getElement, getSelector, toggleVisibility } from "../utils/elements";
+import { getElement, toggleVisibility } from "../utils/elements";
 import { DEFAULT_FILTERS } from "../types/filters";
+import { PopupVideoStructure } from "../types/video";
+import { applyLocale } from "../utils/i18n";
 
-const nextVideoFieldset = getElement("next-video-fieldset");
-const videoHolder = getSelector("div#video-holder.container");
+const nextVideoTitle = getElement<HTMLElement>("next-video-title");
+const nextVideoAuthor = getElement<HTMLElement>("next-video-author");
+const thumbnailHolder = getElement<HTMLAnchorElement>("next-video-thumb");
 const sleepCheckBox = getElement<HTMLInputElement>("sleep-box");
 const authorCheckBox = getElement<HTMLInputElement>("author-box");
 const nameCheckBox = getElement<HTMLInputElement>("name-box");
 const nameTextBox = getElement<HTMLInputElement>("name-text-box");
 
 let nameTextBoxDebounceId: number | undefined = undefined;
-let nextVideoHTML: string | null = null;
+let nextVideo: PopupVideoStructure;
 
 /**
- * Normalizes the YouTube card href by ensuring it points to the full URL.
+ * Sets the thumbnail image and link for the next video block.
+ * @param url  The thumbnail image URL. Pass null to reset to placeholder.
+ * @param link The URL to open when the thumbnail is clicked. Pass null to disable the link.
  */
-function normalizeYTCardHref() {
-	const link = videoHolder?.querySelector('a[href^="/watch"]');
-	if (!link) return;
+function setThumbnail(url: string | null, link: string | null) {
+	if (url) {
+		thumbnailHolder.style.backgroundImage = `
+			url(${url}),
+			linear-gradient(135deg, #343434, #1a1a1a)
+		`;
 
-	const thumbVM = link.querySelector("yt-thumbnail-view-model");
-	if (thumbVM) {
-		Array.from(thumbVM.children).forEach((child) => {
-			if (!child.querySelector("img")) {
-				child.remove();
-			}
-		});
+		thumbnailHolder.classList.add("has-image");
+	} else {
+		thumbnailHolder.style.backgroundImage = "";
+		thumbnailHolder.classList.remove("has-image");
 	}
 
-	const relHref = link.getAttribute("href");
-	if (relHref?.startsWith("/watch")) {
-		link.setAttribute("href", "https://www.youtube.com" + relHref);
-		link.setAttribute("target", "_blank");
+	thumbnailHolder.href = link ?? "#";
+}
+
+/**
+ * Sets the metadata for the next video block (e.g. title and author).
+ * @param title The title of the video.
+ * @param author The author of the video.
+ */
+function setMetadata(title: string | null, author: string | null) {
+	if (title && nextVideoTitle.hasAttribute("data-i18n")) {
+		nextVideoTitle.setAttribute("data-i18n", "");
+		nextVideoTitle.innerHTML = title;
+		nextVideoTitle.title = title;
+	} else {
+		nextVideoTitle.setAttribute("data-i18n", "extensionNextVideoTitle");
+		applyLocale(nextVideoTitle);
+	}
+
+	if (author && nextVideoAuthor.hasAttribute("data-i18n")) {
+		nextVideoAuthor.setAttribute("data-i18n", "");
+		nextVideoAuthor.innerHTML = author;
+		nextVideoAuthor.title = author;
+	} else {
+		nextVideoAuthor.setAttribute("data-i18n", "extensionNextVideoAuthor");
+		applyLocale(nextVideoAuthor);
 	}
 }
 
 /**
  * Pastes the next video HTML into the video holder and updates the visibility of the next video fieldset.
  */
-function pasteNextVideo(nextVideoHTMLParam: string | null) {
-	if (nextVideoHTML === nextVideoHTMLParam) return;
+function pasteNextVideo(nextVideoParam: PopupVideoStructure) {
+	if (nextVideo === nextVideoParam) return;
+	nextVideo = nextVideoParam;
 
-	nextVideoHTML = nextVideoHTMLParam;
-	toggleVisibility(nextVideoFieldset, !!nextVideoHTML);
-	if (nextVideoHTML) {
-		videoHolder.innerHTML = nextVideoHTML;
-		normalizeYTCardHref();
+	const { videoAuthor, videoTitle, videoHref, videoSrc } = nextVideoParam;
+
+	if (nextVideo) {
+		setThumbnail(videoSrc, videoHref);
+		setMetadata(videoTitle, videoAuthor);
 	} else {
-		videoHolder.innerHTML = "";
+		setThumbnail(null, null);
+		setMetadata(null, null);
 	}
 }
 
@@ -70,7 +98,7 @@ function requestNextVideo() {
 			if (chrome.runtime.lastError) {
 				return;
 			}
-			pasteNextVideo(response.nextVideoHTML);
+			pasteNextVideo(response);
 		});
 	});
 }
@@ -88,7 +116,9 @@ function setupMessagesHandler() {
 					return;
 				}
 
-				pasteNextVideo(message.nextVideoHTML);
+				const { action, ...cleanVideo } = message;
+
+				pasteNextVideo(cleanVideo);
 			});
 		}
 	});
