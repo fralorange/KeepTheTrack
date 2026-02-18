@@ -7,6 +7,7 @@ export default interface Filters {
 		enabled: boolean;
 		value: string;
 	};
+	shuffle: boolean;
 }
 
 /**
@@ -15,4 +16,5 @@ export default interface Filters {
 export const DEFAULT_FILTERS: Filters = {
 	byAuthor: false,
 	byName: { enabled: false, value: "" },
+	shuffle: false,
 };

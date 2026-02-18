@@ -122,7 +122,12 @@ export async function createAutoplayOverride(store: Store): Promise<AutoplayOver
 				? []
 				: youtubeContents.filter((content) => predicates.every((predicate) => predicate(content)));
 
-		updateNextVideo(filteredContents.length > 0 ? filteredContents[0].card : null);
+		if (filters.shuffle) {
+			const index = Math.floor(Math.random() * filteredContents.length);
+			updateNextVideo(filteredContents[index]?.card || null);
+		} else {
+			updateNextVideo(filteredContents[0]?.card || null);
+		}
 	};
 
 	await applyFilters();

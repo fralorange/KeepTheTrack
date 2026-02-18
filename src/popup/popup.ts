@@ -6,6 +6,7 @@ import { getElement, toggleVisibility } from "../utils/elements";
 import { DEFAULT_FILTERS } from "../types/filters";
 import { PopupVideoStructure } from "../types/video";
 import { applyLocale } from "../utils/i18n";
+import { DEFAULT_MODES } from "../types/modes";
 
 const nextVideoTitle = getElement<HTMLElement>("next-video-title");
 const nextVideoAuthor = getElement<HTMLElement>("next-video-author");
@@ -14,6 +15,7 @@ const sleepCheckBox = getElement<HTMLInputElement>("sleep-box");
 const authorCheckBox = getElement<HTMLInputElement>("author-box");
 const nameCheckBox = getElement<HTMLInputElement>("name-box");
 const nameTextBox = getElement<HTMLInputElement>("name-text-box");
+const shuffleCheckBox = getElement<HTMLInputElement>("shuffle-box");
 
 let nameTextBoxDebounceId: number | undefined = undefined;
 let nextVideo: PopupVideoStructure;
@@ -165,6 +167,15 @@ function setupFilterListeners() {
 			});
 		}, 300);
 	});
+
+	shuffleCheckBox.addEventListener("change", (e) => {
+		const isChecked = (e.currentTarget as HTMLInputElement).checked;
+		chrome.storage.sync.get("filters", (data: Data) => {
+			const filters = data.filters;
+			filters.shuffle = isChecked;
+			chrome.storage.sync.set({ filters });
+		});
+	});
 }
 
 /**
@@ -206,14 +217,13 @@ document.addEventListener("DOMContentLoaded", async (_e) => {
 				authorCheckBox.checked = filters.byAuthor;
 				nameCheckBox.checked = filters.byName.enabled;
 				nameTextBox.value = filters.byName.value;
+				shuffleCheckBox.checked = filters.shuffle;
 				toggleVisibility(nameTextBox, nameCheckBox.checked);
 			}
 
 			if (!data.modes) {
 				chrome.storage.sync.set({
-					modes: {
-						sleepMode: false,
-					},
+					modes: DEFAULT_MODES,
 				});
 			} else {
 				const modes = data.modes;

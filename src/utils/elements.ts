@@ -137,7 +137,13 @@ export function decomposeVideo(element: HTMLElement | null): PopupVideoStructure
 	const href = link?.href ?? null;
 
 	const img = link?.querySelector("img");
-	const src = img?.src ?? null;
+	let src = img?.src ?? null;
+
+	if (!src && href) {
+		const url = new URL(href);
+		const videoId = url.searchParams.get("v");
+		src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+	}
 
 	const heading = element?.querySelector("h3");
 	const title = heading?.title ?? null;
