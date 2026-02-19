@@ -2,9 +2,14 @@
  * Defines the structure of user preferences for the KeepTheTrack extension.
  */
 export interface Preferences {
+	// Sleep overlay settings
 	sleepOverlayColor: string;
 	sleepOverlayOpacity: number;
 	sleepOverlayDelay: number;
+	// Focus overlay settings
+	focusOverlayIntensity: number;
+	focusOverlayOpacity: number;
+	focusOverlayColor: string;
 }
 
 /**
@@ -14,4 +19,8 @@ export const DEFAULT_PREFERENCES: Preferences = {
 	sleepOverlayDelay: 5,
 	sleepOverlayOpacity: 0.8,
 	sleepOverlayColor: "#000000",
+
+	focusOverlayIntensity: 100,
+	focusOverlayOpacity: 0,
+	focusOverlayColor: "#000000",
 };

@@ -70,10 +70,7 @@ export async function createSleepOverlay(): Promise<SleepOverlay> {
 		const resetInactivityTimer = () => {
 			hideOverlay();
 			clearTimeout(inactivityId);
-			inactivityId = setTimeout(
-				showOverlay,
-				(preferences?.sleepOverlayDelay || 5) * 1000,
-			);
+			inactivityId = setTimeout(showOverlay, (preferences?.sleepOverlayDelay || 5) * 1000);
 		};
 
 		const startTrackingInactivity = () => {
@@ -110,9 +107,7 @@ export async function createSleepOverlay(): Promise<SleepOverlay> {
 	};
 
 	const appendVisualOverlay = (): void => {
-		const playerContent = document.querySelector<HTMLElement>(
-			'#player-container[role="complementary"]',
-		);
+		const playerContent = document.querySelector<HTMLElement>('#player-container[role="complementary"]');
 		if (!playerContent) return;
 
 		if (visualOverlay) {

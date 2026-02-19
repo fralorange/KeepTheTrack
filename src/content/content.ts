@@ -1,8 +1,10 @@
 import { Message, ResponseMessage } from "../types/messages";
+import Modes from "../types/modes";
 import { createStore } from "../types/store";
 import { decomposeVideo } from "../utils/elements";
 import { RecommendationsObserver, startPlaylistObserver, startRecommendationsObserver } from "../utils/observers";
 import { AutoplayOverride, createAutoplayOverride } from "./features/autoplayOverride";
+import { createFocusOverlay, FocusOverlay } from "./features/focusOverlay";
 import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 
 (() => {
@@ -10,6 +12,7 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 
 	let autoplayOverride: AutoplayOverride | null = null;
 	let sleepOverlay: SleepOverlay | null = null;
+	let focusOverlay: FocusOverlay | null = null;
 
 	let playlistObserver: MutationObserver | null = null;
 	let recommendationsObserver: RecommendationsObserver | null = null;
@@ -23,9 +26,11 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	const setupFeatures = async (): Promise<void> => {
 		autoplayOverride?.destroy();
 		sleepOverlay?.destroy();
+		focusOverlay?.destroy();
 
 		autoplayOverride = await createAutoplayOverride(store);
 		sleepOverlay = await createSleepOverlay();
+		focusOverlay = await createFocusOverlay();
 	};
 
 	/**
@@ -34,10 +39,25 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	 */
 	const setupChangesHandler = (): void => {
 		chrome.storage.onChanged.addListener(async (changes, area) => {
-			if (area === "sync" && changes.filters) {
+			if (area !== "sync") return;
+
+			if (changes.filters) {
 				await autoplayOverride?.applyFilters();
-			} else if (area === "sync" && (changes.modes || changes.preferences)) {
+			} else if (changes.preferences) {
 				await sleepOverlay?.applyOverlay();
+				await focusOverlay?.applyOverlay();
+			} else if (changes.modes) {
+				const oldModes = changes.modes.oldValue as Modes;
+				const newModes = changes.modes.newValue as Modes;
+				if (!oldModes || !newModes) return;
+
+				if (oldModes.focusMode !== newModes.focusMode) {
+					await focusOverlay?.applyOverlay();
+				}
+
+				if (oldModes.sleepMode !== newModes.sleepMode) {
+					await sleepOverlay?.applyOverlay();
+				}
 			}
 		});
 	};

@@ -167,5 +167,25 @@
 	"extensionNextVideoAuthor": {
 		"message": "Неизвестный автор",
 		"description": "Заглушка для автора следующего видео."
+	},
+
+	"extensionOptionFocusIntensityLabel": {
+		"message": "Интенсивность наложения режима фокуса",
+		"description": "Метка ползунка интенсивности наложения режима фокуса."
+	},
+
+	"extensionOptionFocusIntensityValue": {
+		"message": "Процентов",
+		"description": "Метка ползунка интенсивности наложения режима фокуса."
+	},
+
+	"extensionOptionFocusColorPickerLabel": {
+		"message": "Цвет наложения режима фокуса",
+		"description": "Метка выбора цвета наложения режима фокуса."
+	},
+
+	"extensionOptionFocusOpacityLabel": {
+		"message": "Прозрачность наложения режима фокуса",
+		"description": "Метка ползунка прозрачности наложения режима фокуса."
 	}
 }

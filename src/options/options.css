@@ -1,8 +1,25 @@
 body {
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-family:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Open Sans",
+		"Helvetica Neue",
+		sans-serif;
 	margin: 0;
 	padding: 0;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid #eee;
+	margin: 0;
+	width: 100%;
 }
 
 .container {
@@ -13,6 +30,7 @@ body {
 
 .tabs-container {
 	max-width: 800px;
+	min-height: 20vh;
 	margin: 0 auto;
 	display: flex;
 	border-radius: 12px;
@@ -21,10 +39,10 @@ body {
 }
 
 .tabs {
-	width: 180px;
-	background: #f8f8f8;
 	display: flex;
 	flex-direction: column;
+	width: 180px;
+	background: #f8f8f8;
 	border-right: 1px solid #ddd;
 }
 
@@ -35,6 +53,11 @@ body {
 	border-bottom: 1px solid #eee;
 	text-align: center;
 	text-transform: uppercase;
+	display: flex;
+	flex-grow: 0;
+	flex-direction: column;
+	justify-content: center;
+	transition: flex-grow 0.5s ease;
 }
 
 .tab:last-child {
@@ -49,6 +72,7 @@ body {
 	background: red;
 	color: white;
 	font-weight: 700;
+	flex-grow: 1;
 }
 
 .content-container {
@@ -58,14 +82,23 @@ body {
 }
 
 .content {
-	display: none;
-}
-
-.content.active {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 	margin: 10px 5px;
+	max-height: 0;
+	min-height: 0;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 0.3s ease,
+		visibility 0.3s;
+}
+
+.content.active {
+	opacity: 1;
+	visibility: visible;
 }
 
 .slider-container {
@@ -227,6 +260,10 @@ input[type="color"]::-webkit-color-swatch {
 	input[type="number"] {
 		background-color: #343434;
 		color: #f0f0f0;
+	}
+
+	hr {
+		border-top: 1px solid #444;
 	}
 
 	.tabs {

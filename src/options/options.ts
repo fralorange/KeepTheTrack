@@ -9,10 +9,7 @@ import { getElement } from "../utils/elements";
  * @param key - The key of the preference to update.
  * @param value - The new value for the preference.
  */
-function updatePreference<K extends keyof Preferences>(
-	key: K,
-	value: Preferences[K],
-) {
+function updatePreference<K extends keyof Preferences>(key: K, value: Preferences[K]) {
 	chrome.storage.sync.get(["preferences"], (data: Data) => {
 		const preferences: Preferences = data.preferences || DEFAULT_PREFERENCES;
 		preferences[key] = value;
@@ -24,24 +21,32 @@ function updatePreference<K extends keyof Preferences>(
  * Initializes the tab functionality by setting up event listeners
  */
 function setupTabs() {
-	const tabs = document.querySelectorAll(".tabs-container .tab");
-	const contents = document.querySelectorAll(".tabs-container .content");
+	const tabs = document.querySelectorAll<HTMLElement>(".tabs-container .tab");
+	const contents = document.querySelectorAll<HTMLElement>(".tabs-container .content");
 
-	const removeActiveClasses = () => {
-		tabs.forEach((tab) => {
-			tab.classList.remove("active");
+	const activeContent = document.querySelector<HTMLElement>(".content.active");
+	if (activeContent) {
+		requestAnimationFrame(() => {
+			activeContent.style.maxHeight = `${activeContent.scrollHeight}px`;
 		});
-
-		contents.forEach((content) => {
-			content.classList.remove("active");
-		});
-	};
+	}
 
 	tabs.forEach((tab, i) => {
 		tab.addEventListener("click", () => {
-			removeActiveClasses();
-			contents[i].classList.add("active");
+			tabs.forEach((t) => t.classList.remove("active"));
 			tab.classList.add("active");
+
+			contents.forEach((c) => {
+				c.classList.remove("active");
+				c.style.maxHeight = "0px";
+			});
+
+			const targetContent = contents[i];
+			targetContent.classList.add("active");
+
+			requestAnimationFrame(() => {
+				targetContent.style.maxHeight = `${targetContent.scrollHeight}px`;
+			});
 		});
 	});
 }
@@ -52,11 +57,7 @@ function setupTabs() {
  * @param {*} valueId - The ID of the value display element.
  * @param {*} prefKey - The key for the preference to update in Chrome's storage.
  */
-function setupSlider(
-	sliderId: string,
-	valueId: string,
-	prefKey: keyof Preferences,
-) {
+function setupSlider(sliderId: string, valueId: string, prefKey: keyof Preferences) {
 	const slider = document.getElementById(sliderId) as HTMLInputElement;
 	const sliderValue = document.getElementById(valueId) as HTMLInputElement;
 
@@ -119,11 +120,7 @@ function setupResetButton() {
 		}
 		chrome.storage.sync.set({ preferences: DEFAULT_PREFERENCES }, () => {
 			setupSlider("slider-delay", "slider-delay-value", "sleepOverlayDelay");
-			setupSlider(
-				"slider-opacity",
-				"slider-opacity-value",
-				"sleepOverlayOpacity",
-			);
+			setupSlider("slider-opacity", "slider-opacity-value", "sleepOverlayOpacity");
 			setupColorPicker("color-picker", "sleepOverlayColor");
 		});
 	});
@@ -153,10 +150,7 @@ function setupImportButton() {
 					}
 					const jsonPreferences = JSON.parse(reader.result) as Preferences;
 
-					chrome.storage.sync.set(
-						{ preferences: jsonPreferences },
-						updateVisuals,
-					);
+					chrome.storage.sync.set({ preferences: jsonPreferences }, updateVisuals);
 				} catch (error) {
 					alert(chrome.i18n.getMessage("extensionOptionImportError"));
 					return;
@@ -216,9 +210,7 @@ function updateVisuals() {
 	const sliderDelay = getElement<HTMLInputElement>("slider-delay");
 	const sliderDelayValue = getElement<HTMLInputElement>("slider-delay-value");
 	const sliderOpacity = getElement<HTMLInputElement>("slider-opacity");
-	const sliderOpacityValue = getElement<HTMLInputElement>(
-		"slider-opacity-value",
-	);
+	const sliderOpacityValue = getElement<HTMLInputElement>("slider-opacity-value");
 	const colorPicker = getElement<HTMLInputElement>("color-picker");
 
 	chrome.storage.sync.get(["preferences"], (data: Data) => {
@@ -246,7 +238,10 @@ initPreferences();
 setupTabs();
 setupSlider("slider-delay", "slider-delay-value", "sleepOverlayDelay");
 setupSlider("slider-opacity", "slider-opacity-value", "sleepOverlayOpacity");
+setupSlider("slider-focus", "slider-focus-value", "focusOverlayIntensity");
+setupSlider("slider-focus-opacity", "slider-focus-opacity-value", "focusOverlayOpacity");
 setupColorPicker("color-picker", "sleepOverlayColor");
+setupColorPicker("color-picker-focus", "focusOverlayColor");
 setupResetButton();
 setupImportButton();
 setupExportButton();

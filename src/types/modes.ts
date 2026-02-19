@@ -3,6 +3,7 @@
  */
 export default interface Modes {
 	sleepMode: boolean;
+	focusMode: boolean;
 }
 
 /**
@@ -10,4 +11,5 @@ export default interface Modes {
  */
 export const DEFAULT_MODES: Modes = {
 	sleepMode: false,
+	focusMode: false,
 };

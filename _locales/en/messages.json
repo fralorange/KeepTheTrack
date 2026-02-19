@@ -167,5 +167,25 @@
 	"extensionNextVideoAuthor": {
 		"message": "Unknown author",
 		"description": "Placeholder for next video author."
+	},
+
+	"extensionOptionFocusIntensityLabel": {
+		"message": "Focus Mode Overlay Intensity",
+		"description": "Label for the focus mode overlay intensity slider."
+	},
+
+	"extensionOptionFocusIntensityValue": {
+		"message": "Percents",
+		"description": "Label for the focus mode overlay intensity slider value."
+	},
+
+	"extensionOptionFocusColorPickerLabel": {
+		"message": "Focus Mode Overlay Color",
+		"description": "Label for the focus mode overlay color picker."
+	},
+
+	"extensionOptionFocusOpacityLabel": {
+		"message": "Focus Mode Overlay Opacity",
+		"description": "Label for the focus mode overlay opacity slider."
 	}
 }

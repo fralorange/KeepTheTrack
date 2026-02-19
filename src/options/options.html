@@ -1,56 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title data-i18n="extensionOptions">KeepTheTrack Options</title>
-        <link rel="stylesheet" href="options.css">
-    </head>
-    <body>
-        <header class="container">
-            <img src="../../assets/icons/logo.svg" alt="KeepTheTrack Icon" class="icon" width="192" height="192">
-            <h1 data-i18n="extensionOptions">KeepTheTrack Options</h1>
-            <h3 data-i18n="extensionOptionsDescription" style="font-weight: normal;">Configure the behavior and appearance of the KeepTheTrack extension.</p>
-        </header>
-        <div class="tabs-container">
-            <div class="tabs">
-                <div class="tab active" data-i18n="extensionOptionBehavior">Behavior</div>
-                <div class="tab" data-i18n="extensionOptionAppearance">Appearance</div>
-                <div class="tab" data-i18n="extensionOptionAdvanced">Advanced</div>
-            </div>
+	<head>
+		<meta charset="UTF-8" />
+		<title data-i18n="extensionOptions">KeepTheTrack Options</title>
+		<link rel="stylesheet" href="options.css" />
+	</head>
+	<body>
+		<header class="container">
+			<img src="../../assets/icons/logo.svg" alt="KeepTheTrack Icon" class="icon" width="192" height="192" />
+			<h1 data-i18n="extensionOptions">KeepTheTrack Options</h1>
+			<h3 data-i18n="extensionOptionsDescription" style="font-weight: normal">Configure the behavior and appearance of the KeepTheTrack extension.</h3>
+		</header>
+		<div class="tabs-container">
+			<div class="tabs">
+				<div class="tab active" data-i18n="extensionOptionBehavior">Behavior</div>
+				<div class="tab" data-i18n="extensionOptionAppearance">Appearance</div>
+				<div class="tab" data-i18n="extensionOptionAdvanced">Advanced</div>
+			</div>
 
-            <div class="content-container">
-                <div class="content active">
-                    <div class="slider-container">
-                        <label for="slider" data-i18n="extensionOptionSliderLabel">Sleep Overlay Delay</label>
-                        <input type="range" id="slider-delay" class="slider" min="0" max="10" value="5">
-                        <input type="number" id="slider-delay-value" min="0" max="10" value="5">
-                        <label for="slider-value" class="slider-value-label" data-i18n="extensionOptionSliderValue">Seconds</label>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class="slider-container">
-                        <label for="slider" data-i18n="extensionOptionOpacitySliderLabel">Sleep Overlay Opacity</label>
-                        <input type="range" id="slider-opacity" class="slider" min="0.1" max="1" value="0.8" step="0.1">
-                        <input type="number" id="slider-opacity-value" min="0.1" max="1" value="0.8" step="0.1">
-                        <label for="slider-value" class="slider-value-label" data-i18n="extensionOptionOpacitySliderValue">Alpha</label>
-                    </div>
-                    <div class="color-picker-container">
-                        <label for="color-picker" data-i18n="extensionOptionColorPickerLabel">Sleep Overlay Color</label>
-                        <input type="color" id="color-picker" value="#000000">
-                    </div>
-                </div>
-                <div class="content">
-                    <div class="button-container">
-                        <button class="reset-button" type="reset" data-i18n="extensionOptionResetButton">Reset</button>
-                        <button class="button" id="import-button" type="button" data-i18n="extensionOptionImportButton">Import</button>
-                        <button class="button" id="export-button" type="button" data-i18n="extensionOptionExportButton">Export</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <footer class="container">
-            <div id="version-text" class="version-text"></div>
-        </footer>
-    </body>
+			<div class="content-container">
+				<div class="content active">
+					<div class="slider-container">
+						<label for="slider" data-i18n="extensionOptionSliderLabel">Sleep Overlay Delay</label>
+						<input type="range" id="slider-delay" class="slider" min="0" max="10" value="5" />
+						<input type="number" id="slider-delay-value" min="0" max="10" value="5" />
+						<label for="slider-value" class="slider-value-label" data-i18n="extensionOptionSliderValue">Seconds</label>
+					</div>
+				</div>
+				<div class="content">
+					<!-- Sleep options -->
+					<div class="slider-container">
+						<label for="slider" data-i18n="extensionOptionOpacitySliderLabel">Sleep Overlay Opacity</label>
+						<input type="range" id="slider-opacity" class="slider" min="0.1" max="1" value="0.8" step="0.1" />
+						<input type="number" id="slider-opacity-value" min="0.1" max="1" value="0.8" step="0.1" />
+						<label for="slider-value" class="slider-value-label" data-i18n="extensionOptionOpacitySliderValue">Alpha</label>
+					</div>
+					<div class="color-picker-container">
+						<label for="color-picker" data-i18n="extensionOptionColorPickerLabel">Sleep Overlay Color</label>
+						<input type="color" id="color-picker" value="#000000" />
+					</div>
+					<hr />
+					<!-- Focus options -->
+					<div class="slider-container">
+						<label for="slider-focus" data-i18n="extensionOptionFocusIntensityLabel">Focus Overlay Intensity</label>
+						<input type="range" id="slider-focus" class="slider" min="0" max="100" value="100" />
+						<input type="number" id="slider-focus-value" min="0" max="100" value="100" />
+						<label for="slider-focus-value" class="slider-value-label" data-i18n="extensionOptionFocusIntensityValue">Percents</label>
+					</div>
+					<div class="slider-container">
+						<label for="slider-focus-opacity" data-i18n="extensionOptionFocusOpacityLabel">Focus Overlay Opacity</label>
+						<input type="range" id="slider-focus-opacity" class="slider" min="0" max="1" value="0" step="0.1" />
+						<input type="number" id="slider-focus-opacity-value" min="0" max="1" value="0" step="0.1" />
+						<label for="slider-focus-opacity-value" class="slider-value-label" data-i18n="extensionOptionOpacitySliderValue">Alpha</label>
+					</div>
+					<div class="color-picker-container">
+						<label for="color-picker-focus" data-i18n="extensionOptionFocusColorPickerLabel">Focus Overlay Color</label>
+						<input type="color" id="color-picker-focus" value="#000000" />
+					</div>
+				</div>
+				<div class="content">
+					<div class="button-container">
+						<button class="reset-button" type="reset" data-i18n="extensionOptionResetButton">Reset</button>
+						<button class="button" id="import-button" type="button" data-i18n="extensionOptionImportButton">Import</button>
+						<button class="button" id="export-button" type="button" data-i18n="extensionOptionExportButton">Export</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="container">
+			<div id="version-text" class="version-text"></div>
+		</footer>
+	</body>
 </html>
