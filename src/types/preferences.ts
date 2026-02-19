@@ -6,6 +6,8 @@ export interface Preferences {
 	sleepOverlayColor: string;
 	sleepOverlayOpacity: number;
 	sleepOverlayDelay: number;
+	// Cinema overlay settings
+	cinemaOverlayOpacity: number;
 	// Focus overlay settings
 	focusOverlayIntensity: number;
 	focusOverlayOpacity: number;
@@ -19,6 +21,8 @@ export const DEFAULT_PREFERENCES: Preferences = {
 	sleepOverlayDelay: 5,
 	sleepOverlayOpacity: 0.8,
 	sleepOverlayColor: "#000000",
+
+	cinemaOverlayOpacity: 0.8,
 
 	focusOverlayIntensity: 100,
 	focusOverlayOpacity: 0,

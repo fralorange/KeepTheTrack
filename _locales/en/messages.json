@@ -95,7 +95,7 @@
 	},
 
 	"extensionOptionSliderLabel": {
-		"message": "Sleep Overlay Delay",
+		"message": "Sleep Mode Overlay Delay",
 		"description": "Label for the sleep overlay delay slider."
 	},
 
@@ -105,7 +105,7 @@
 	},
 
 	"extensionOptionOpacitySliderLabel": {
-		"message": "Sleep Mode Opacity",
+		"message": "Sleep Mode Overlay Opacity",
 		"description": "Label for the sleep mode opacity slider."
 	},
 
@@ -115,7 +115,7 @@
 	},
 
 	"extensionOptionColorPickerLabel": {
-		"message": "Sleep Mode Color",
+		"message": "Sleep Mode Overlay Color",
 		"description": "Label for the sleep mode color picker."
 	},
 
@@ -149,9 +149,9 @@
 		"description": "Label for the shuffle option."
 	},
 
-	"extensionShortsMode": {
-		"message": "Shorts Mode",
-		"description": "Shorts Mode Name."
+	"extensionCinemaMode": {
+		"message": "Cinema Mode",
+		"description": "Cinema Mode Name."
 	},
 
 	"extensionFocusMode": {
@@ -167,6 +167,11 @@
 	"extensionNextVideoAuthor": {
 		"message": "Unknown author",
 		"description": "Placeholder for next video author."
+	},
+
+	"extensionOptionCinemaOpacityLabel": {
+		"message": "Cinema Mode Overlay Opacity",
+		"description": "Label for the cinema mode overlay opacity slider."
 	},
 
 	"extensionOptionFocusIntensityLabel": {

@@ -17,6 +17,7 @@ const nameCheckBox = getElement<HTMLInputElement>("name-box");
 const nameTextBox = getElement<HTMLInputElement>("name-text-box");
 const shuffleCheckBox = getElement<HTMLInputElement>("shuffle-box");
 const focusCheckBox = getElement<HTMLInputElement>("focus-box");
+const cinemaCheckBox = getElement<HTMLInputElement>("cinema-box");
 
 let nameTextBoxDebounceId: number | undefined = undefined;
 let nextVideo: PopupVideoStructure;
@@ -200,6 +201,15 @@ function setupModeListeners() {
 			chrome.storage.sync.set({ modes });
 		});
 	});
+
+	cinemaCheckBox.addEventListener("change", (e) => {
+		const isChecked = (e.currentTarget as HTMLInputElement).checked;
+		chrome.storage.sync.get("modes", (data: Data) => {
+			const modes = data.modes;
+			modes.cinemaMode = isChecked;
+			chrome.storage.sync.set({ modes });
+		});
+	});
 }
 
 /**
@@ -238,6 +248,7 @@ document.addEventListener("DOMContentLoaded", async (_e) => {
 			} else {
 				const modes = data.modes;
 				sleepCheckBox.checked = modes.sleepMode;
+				cinemaCheckBox.checked = modes.cinemaMode;
 				focusCheckBox.checked = modes.focusMode;
 			}
 

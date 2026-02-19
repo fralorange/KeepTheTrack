@@ -149,14 +149,14 @@
 		"description": "Фильтр по случайному порядку."
 	},
 
-	"extensionShortsMode": {
-		"message": "Режим Shorts",
-		"description": "Название режима просмотра коротких видео."
+	"extensionCinemaMode": {
+		"message": "Режим кино",
+		"description": "Название режима кинотеатра."
 	},
 
 	"extensionFocusMode": {
 		"message": "Режим фокуса",
-		"description": "Описание режима фокусировки."
+		"description": "Название режима фокусировки."
 	},
 
 	"extensionNextVideoTitle": {
@@ -167,6 +167,11 @@
 	"extensionNextVideoAuthor": {
 		"message": "Неизвестный автор",
 		"description": "Заглушка для автора следующего видео."
+	},
+
+	"extensionOptionCinemaOpacityLabel": {
+		"message": "Прозрачность наложения режима кинотеатра",
+		"description": "Метка ползунка прозрачности наложения режима кинотеатра."
 	},
 
 	"extensionOptionFocusIntensityLabel": {

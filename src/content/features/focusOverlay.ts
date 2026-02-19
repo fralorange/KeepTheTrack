@@ -56,22 +56,22 @@ export async function createFocusOverlay(): Promise<FocusOverlay> {
 		blured = false;
 
 		oldFilters.forEach((filter, selector) => {
-			const element = document.querySelector<HTMLElement>(selector);
-			if (element) {
-				element.style.filter = filter;
+			const background = oldBackgrounds.get(selector);
+			const el = document.querySelector<HTMLElement>(selector);
+			if (el && typeof background === "string") {
+				el.style.filter = filter;
+				el.style.backgroundColor = background;
 			}
 		});
-		oldFilters.clear();
 
-		oldBackgrounds.forEach((background, selector) => {
-			const element = document.querySelector<HTMLElement>(selector);
-			if (element) {
-				element.style.backgroundColor = background;
-			}
-		});
+		oldFilters.clear();
 		oldBackgrounds.clear();
 	};
 
+	/**
+	 * Applies overlay setting based on the current mode.
+	 * @returns {Promise<void>}
+	 */
 	const applyOverlay = async (): Promise<void> => {
 		return new Promise<void>((resolve) => {
 			chrome.storage.sync.get(["modes", "preferences"], (data: Data) => {

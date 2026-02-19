@@ -4,6 +4,7 @@ import { createStore } from "../types/store";
 import { decomposeVideo } from "../utils/elements";
 import { RecommendationsObserver, startPlaylistObserver, startRecommendationsObserver } from "../utils/observers";
 import { AutoplayOverride, createAutoplayOverride } from "./features/autoplayOverride";
+import { CinemaOverlay, createCinemaOverlay } from "./features/cinemaOverlay";
 import { createFocusOverlay, FocusOverlay } from "./features/focusOverlay";
 import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 
@@ -12,6 +13,7 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 
 	let autoplayOverride: AutoplayOverride | null = null;
 	let sleepOverlay: SleepOverlay | null = null;
+	let cinemaOverlay: CinemaOverlay | null = null;
 	let focusOverlay: FocusOverlay | null = null;
 
 	let playlistObserver: MutationObserver | null = null;
@@ -26,10 +28,12 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	const setupFeatures = async (): Promise<void> => {
 		autoplayOverride?.destroy();
 		sleepOverlay?.destroy();
+		cinemaOverlay?.destroy();
 		focusOverlay?.destroy();
 
 		autoplayOverride = await createAutoplayOverride(store);
 		sleepOverlay = await createSleepOverlay();
+		cinemaOverlay = await createCinemaOverlay();
 		focusOverlay = await createFocusOverlay();
 	};
 
@@ -45,18 +49,23 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 				await autoplayOverride?.applyFilters();
 			} else if (changes.preferences) {
 				await sleepOverlay?.applyOverlay();
+				await cinemaOverlay?.applyOverlay();
 				await focusOverlay?.applyOverlay();
 			} else if (changes.modes) {
 				const oldModes = changes.modes.oldValue as Modes;
 				const newModes = changes.modes.newValue as Modes;
 				if (!oldModes || !newModes) return;
 
-				if (oldModes.focusMode !== newModes.focusMode) {
-					await focusOverlay?.applyOverlay();
-				}
-
 				if (oldModes.sleepMode !== newModes.sleepMode) {
 					await sleepOverlay?.applyOverlay();
+				}
+
+				if (oldModes.cinemaMode !== newModes.cinemaMode) {
+					await cinemaOverlay?.applyOverlay();
+				}
+
+				if (oldModes.focusMode !== newModes.focusMode) {
+					await focusOverlay?.applyOverlay();
 				}
 			}
 		});
@@ -72,17 +81,15 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 			}
 		});
 
-		chrome.runtime.onMessage.addListener(
-			(message: Message, _sender, sendResponse: (response: ResponseMessage) => void) => {
-				if (message.action === "requestNextVideo") {
-					let nextVideo = store.getNextVideo();
+		chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse: (response: ResponseMessage) => void) => {
+			if (message.action === "requestNextVideo") {
+				let nextVideo = store.getNextVideo();
 
-					let popupVideo = decomposeVideo(nextVideo);
+				let popupVideo = decomposeVideo(nextVideo);
 
-					sendResponse(popupVideo);
-				}
-			},
-		);
+				sendResponse(popupVideo);
+			}
+		});
 	};
 
 	/**

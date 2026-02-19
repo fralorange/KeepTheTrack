@@ -238,6 +238,7 @@ initPreferences();
 setupTabs();
 setupSlider("slider-delay", "slider-delay-value", "sleepOverlayDelay");
 setupSlider("slider-opacity", "slider-opacity-value", "sleepOverlayOpacity");
+setupSlider("slider-cinema-opacity", "slider-cinema-opacity-value", "cinemaOverlayOpacity");
 setupSlider("slider-focus", "slider-focus-value", "focusOverlayIntensity");
 setupSlider("slider-focus-opacity", "slider-focus-opacity-value", "focusOverlayOpacity");
 setupColorPicker("color-picker", "sleepOverlayColor");
