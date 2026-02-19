@@ -4,15 +4,16 @@
 	"description": "__MSG_extensionDescription__",
 	"version": "3.0.0",
 	"permissions": ["storage", "tabs", "webNavigation"],
-	"host_permissions": ["https://*.youtube.com/watch*"],
+	"host_permissions": ["https://*.youtube.com/*"],
 	"background": {
 		"service_worker": "dist/background.js"
 	},
 	"options_page": "dist/options.html",
 	"content_scripts": [
 		{
-			"matches": ["https://*.youtube.com/watch*"],
-			"js": ["dist/content.js"]
+			"matches": ["https://*.youtube.com/*"],
+			"js": ["dist/content.js"],
+			"run_at": "document_start"
 		}
 	],
 	"default_locale": "en",

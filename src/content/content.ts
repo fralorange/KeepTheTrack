@@ -93,11 +93,41 @@ import { createSleepOverlay, SleepOverlay } from "./features/sleepOverlay";
 	};
 
 	/**
+	 * Cleans up all active observers, overlay objects, and resets the store state.
+	 */
+	const destroy = () => {
+		playlistObserver?.disconnect();
+		playlistObserver = null;
+
+		recommendationsObserver?.destroy();
+		recommendationsObserver = null;
+
+		autoplayOverride?.destroy();
+		autoplayOverride = null;
+
+		sleepOverlay?.destroy();
+		sleepOverlay = null;
+
+		cinemaOverlay?.destroy();
+		cinemaOverlay = null;
+
+		focusOverlay?.destroy();
+		focusOverlay = null;
+
+		store.setNextVideo(null);
+	};
+
+	/**
 	 * Initializes the content script by setting up observers and features.
 	 * Uses a mutex to prevent concurrent initializations.
 	 * @returns {Promise<void>}
 	 */
 	const init = async (): Promise<void> => {
+		if (location.pathname !== "/watch") {
+			destroy();
+			return;
+		}
+
 		if (initPromise) return initPromise;
 
 		initPromise = (async () => {
