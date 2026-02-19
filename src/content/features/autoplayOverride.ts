@@ -52,19 +52,52 @@ export async function createAutoplayOverride(store: Store): Promise<AutoplayOver
 		youtubePlayer.addEventListener("ended", onYouTubeEnded);
 	}
 
+	async function waitForCorrectVideo(): Promise<void> {
+		const expectedId = new URL(location.href).searchParams.get("v");
+		if (!expectedId) return;
+
+		return new Promise((resolve) => {
+			const check = () => {
+				const flexy = document.querySelector("ytd-watch-flexy");
+				const currentId = flexy?.getAttribute("video-id");
+
+				if (currentId === expectedId) {
+					observer.disconnect();
+					resolve();
+				}
+			};
+
+			const observer = new MutationObserver(check);
+
+			observer.observe(document.body, {
+				attributes: true,
+				subtree: true,
+				childList: true,
+			});
+
+			check();
+		});
+	}
+
+	/**
+	 * Retrieves information about YouTube content, including the author and a list of video details.
+	 * @returns  A promise that resolves to an object containing the author and an array of YouTube content information.
+	 */
 	const getYouTubeInfo = async (): Promise<YouTubeInfo> => {
-		const youtubeCards = await waitForElements("yt-lockup-view-model");
+		const secondary = await waitForElement<HTMLElement>("#secondary.style-scope.ytd-watch-flexy");
+		const youtubeCards = await waitForElements("yt-lockup-view-model", secondary);
+
 		let youtubeContents: YouTubeContent[] = Array.from(youtubeCards).map<YouTubeContent>((card) => {
 			const titleEl = card.querySelector("a.yt-lockup-metadata-view-model__title");
 			const title = titleEl?.textContent.trim() || null;
 
-			const authorEl = card.querySelector(
-				".yt-content-metadata-view-model__metadata-row > span.yt-core-attributed-string",
-			);
+			const authorEl = card.querySelector(".yt-content-metadata-view-model__metadata-row > span.yt-core-attributed-string");
 			const author = authorEl?.textContent?.trim() || null;
 
 			return { title, author, card: card instanceof HTMLElement ? card : null };
 		});
+
+		console.log(youtubeContents);
 
 		let author: string = (await waitForElement("#upload-info a"))?.innerText ?? "";
 
@@ -97,10 +130,12 @@ export async function createAutoplayOverride(store: Store): Promise<AutoplayOver
 
 		const playlistPanel = document.querySelector(".ytd-watch-flexy ytd-playlist-panel-renderer");
 
-		if (playlistPanel && !playlistPanel.hasAttribute("hidden")) {
+		if ((playlistPanel && !playlistPanel.hasAttribute("hidden")) || location.pathname !== "/watch") {
 			updateNextVideo(null);
 			return;
 		}
+
+		await waitForCorrectVideo();
 
 		const filters = await getFilters();
 		const { author, youtubeContents } = await getYouTubeInfo();
@@ -117,11 +152,7 @@ export async function createAutoplayOverride(store: Store): Promise<AutoplayOver
 			predicates.push((item) => item.title?.toLowerCase().includes(pattern) ?? false);
 		}
 
-		const filteredContents =
-			predicates.length === 0
-				? []
-				: youtubeContents.filter((content) => predicates.every((predicate) => predicate(content)));
-
+		const filteredContents = predicates.length === 0 ? [] : youtubeContents.filter((content) => predicates.every((predicate) => predicate(content)));
 		if (filters.shuffle) {
 			const index = Math.floor(Math.random() * filteredContents.length);
 			updateNextVideo(filteredContents[index]?.card || null);

@@ -32,11 +32,14 @@ export function waitForElement<T extends HTMLElement>(selector: string): Promise
  * @param {*} maxWait The maximum time in milliseconds to wait for the elements to appear.
  * @returns {Promise} A promise that resolves with an array of elements when they are found.
  */
-export function waitForElements(
-	selector: string,
-	debounceTime: number = 200,
-	maxWait: number = 5000,
-): Promise<Element[]> {
+export function waitForElements(selector: string, container?: HTMLElement | null, debounceTime: number = 200, maxWait: number = 5000): Promise<Element[]> {
+	/**
+	 * Gets elements from either container or document.
+	 */
+	const getElements = () => {
+		return container?.querySelectorAll(selector) ?? document.querySelectorAll(selector);
+	};
+
 	return new Promise((resolve) => {
 		let lastCount = 0;
 		let debounceId: number | undefined = undefined;
@@ -50,11 +53,11 @@ export function waitForElements(
 
 		const finish = () => {
 			cleanup();
-			resolve(Array.from(document.querySelectorAll(selector)));
+			resolve(Array.from(getElements()));
 		};
 
 		const check = () => {
-			const elements = document.querySelectorAll(selector);
+			const elements = getElements();
 			const currentCount = elements.length;
 
 			if (currentCount !== lastCount) {
@@ -67,14 +70,14 @@ export function waitForElements(
 			}
 		};
 
-		maxWait = window.setTimeout(() => {
+		maxWaitId = window.setTimeout(() => {
 			finish();
 		}, maxWait);
 
 		check();
 
 		const observer = new MutationObserver(check);
-		observer.observe(document.body, { childList: true, subtree: true });
+		observer.observe(container ?? document.body, { childList: true, subtree: true });
 	});
 }
 
@@ -112,11 +115,7 @@ export function getSelector<T extends HTMLElement>(selector: string): T {
  * @param {*} visible - A boolean indicating whether the element should be visible or not.
  * @param {*} callback - An optional callback function to execute when the element is hidden.
  */
-export function toggleVisibility(
-	element: HTMLElement,
-	visible: boolean,
-	callback: (() => void) | undefined = undefined,
-) {
+export function toggleVisibility(element: HTMLElement, visible: boolean, callback: (() => void) | undefined = undefined) {
 	if (visible) {
 		element.classList.remove("hidden");
 	} else {

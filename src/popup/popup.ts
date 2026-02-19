@@ -94,14 +94,17 @@ function requestNextVideo() {
 		if (!tabs || !tabs[0] || !tabs[0].id) {
 			return;
 		}
+
+		if (!tabs[0].url?.includes("/watch")) {
+			return;
+		}
+
 		const tabId = tabs[0].id;
 
 		const message: Message = { action: "requestNextVideo" };
 
 		chrome.tabs.sendMessage(tabId, message, (response: ResponseMessage) => {
-			if (chrome.runtime.lastError) {
-				return;
-			}
+			if (chrome.runtime.lastError) return;
 			pasteNextVideo(response);
 		});
 	});
