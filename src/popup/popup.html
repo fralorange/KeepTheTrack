@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html>
 	<head>
@@ -9,70 +9,75 @@
 	<body class="loading">
 		<div class="container heading">
 			<span class="option">
-				<a class="btn"
-					><img
-						id="options-btn"
-						class="icon-gear"
-						src="../../assets/icons/gear.svg"
-						width="15"
-						height="15"
-						alt="Settings Icon"
-				/></a>
+				<a class="btn"><img id="options-btn" class="icon-gear" src="../../assets/icons/gear.svg" width="15" height="15" alt="Settings Icon" /></a>
 			</span>
 
-			<img src="../../assets/icons/logo.svg" width="35" height="35" />
-			<h2>KeepTheTrack</h2>
+			<img src="../../assets/icons/logo.svg" width="50" height="50" />
+			<h1>KeepTheTrack</h1>
 		</div>
 
-		<fieldset>
-			<legend data-i18n="extensionFilters">Filters</legend>
+		<div class="card-container">
+			<fieldset>
+				<legend data-i18n="extensionFilters">Filters</legend>
 
-			<div>
-				<input type="checkbox" name="author" id="author-box" role="switch" />
-				<label for="author" data-i18n="extensionByAuthor">By author</label>
-			</div>
+				<div>
+					<input type="checkbox" name="author" id="author-box" role="switch" />
+					<label for="author" data-i18n="extensionByAuthor">By author</label>
+				</div>
 
-			<div>
-				<input type="checkbox" name="name" id="name-box" role="switch" />
-				<label for="name" data-i18n="extensionByName">By name</label>
-				<input type="text" id="name-text-box" class="hidden fit" />
-			</div>
-		</fieldset>
+				<div>
+					<input type="checkbox" name="name" id="name-box" role="switch" />
+					<label for="name" data-i18n="extensionByName">By name</label>
+					<input type="text" id="name-text-box" class="hidden fit" data-i18n="extensionByNamePlaceholder" placeholder="Video title..." />
+				</div>
 
-		<fieldset>
-			<legend data-i18n="extensionModes">Viewing Modes</legend>
+				<div>
+					<input type="checkbox" name="shuffle" id="shuffle-box" role="switch" />
+					<label for="shuffle" data-i18n="extensionShuffle">Shuffle</label>
+				</div>
+			</fieldset>
 
-			<div>
-				<input type="checkbox" name="sleep" id="sleep-box" role="switch" />
-				<label for="sleep" data-i18n="extensionSleepMode">Sleep Mode</label>
-			</div>
-		</fieldset>
+			<fieldset>
+				<legend data-i18n="extensionModes">Viewing Modes</legend>
 
-		<fieldset id="next-video-fieldset" class="hidden">
+				<div>
+					<input type="checkbox" name="sleep" id="sleep-box" role="switch" />
+					<label for="sleep" data-i18n="extensionSleepMode">Sleep Mode</label>
+				</div>
+
+				<div>
+					<input type="checkbox" name="cinema" id="cinema-box" role="switch" />
+					<label for="cinema" data-i18n="extensionCinemaMode">Cinema Mode </label>
+				</div>
+
+				<div>
+					<input type="checkbox" name="focus" id="focus-box" role="switch" />
+					<label for="focus" data-i18n="extensionFocusMode">Focus Mode</label>
+				</div>
+			</fieldset>
+		</div>
+
+		<fieldset id="next-video-fieldset">
 			<legend data-i18n="extensionNextVideo">Next video</legend>
-
-			<div class="container" id="video-holder"></div>
+			<div class="container" id="video-holder">
+				<a id="next-video-thumb" class="thumbnail" href="#" target="_blank" rel="noopener">
+					<svg viewBox="0 0 100 100" class="play-icon">
+						<polygon points="40,30 75,50 40,70" fill="white" />
+					</svg>
+				</a>
+				<div class="flex-block">
+					<h3 id="next-video-title" class="truncate" data-i18n="extensionNextVideoTitle" title="Empty title">Empty title</h3>
+					<h4 id="next-video-author" class="truncate" data-i18n="extensionNextVideoAuthor" title="Unknown author">Unknown author</h4>
+				</div>
+			</div>
 		</fieldset>
 
 		<footer>
 			<div class="about">
-				<a
-					href="https://github.com/fralorange/KeepTheTrack"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<img
-						id="github-logo"
-						src="../../assets/vendor/github/github-mark.svg"
-						alt="GitHub"
-						title="GitHub"
-						width="20"
-						height="20"
-					/>
+				<a href="https://github.com/fralorange/KeepTheTrack" target="_blank" rel="noopener noreferrer">
+					<img id="github-logo" src="../../assets/vendor/github/github-mark.svg" alt="GitHub" title="GitHub" width="20" height="20" />
 				</a>
 			</div>
 		</footer>
 	</body>
-	<script src="../utils/i18n.js"></script>
-	<script src="popup.js"></script>
 </html>

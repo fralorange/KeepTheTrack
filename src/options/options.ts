@@ -1,17 +1,17 @@
-const DEFAULT_PREFERENCES = {
-	sleepOverlayDelay: 5,
-	sleepOverlayOpacity: 0.8,
-	sleepOverlayColor: "#000000",
-};
+import "./options.css";
+import "../utils/i18n";
+import Data from "../types/data";
+import { DEFAULT_PREFERENCES, Preferences } from "../types/preferences";
+import { getElement } from "../utils/elements";
 
 /**
- * Updates a user preference in Chrome's storage.
- * @param {*} key - The key for the preference to update.
- * @param {*} value - The value to set for the preference.
+ * Updates a specific preference in storage.
+ * @param key - The key of the preference to update.
+ * @param value - The new value for the preference.
  */
-function updatePreference(key, value) {
-	chrome.storage.sync.get(["preferences"], (data) => {
-		const preferences = data.preferences || {};
+function updatePreference<K extends keyof Preferences>(key: K, value: Preferences[K]) {
+	chrome.storage.sync.get(["preferences"], (data: Data) => {
+		const preferences: Preferences = data.preferences || DEFAULT_PREFERENCES;
 		preferences[key] = value;
 		chrome.storage.sync.set({ preferences });
 	});
@@ -21,24 +21,32 @@ function updatePreference(key, value) {
  * Initializes the tab functionality by setting up event listeners
  */
 function setupTabs() {
-	const tabs = document.querySelectorAll(".tabs-container .tab");
-	const contents = document.querySelectorAll(".tabs-container .content");
+	const tabs = document.querySelectorAll<HTMLElement>(".tabs-container .tab");
+	const contents = document.querySelectorAll<HTMLElement>(".tabs-container .content");
 
-	const removeActiveClasses = () => {
-		tabs.forEach((tab) => {
-			tab.classList.remove("active");
+	const activeContent = document.querySelector<HTMLElement>(".content.active");
+	if (activeContent) {
+		requestAnimationFrame(() => {
+			activeContent.style.maxHeight = `${activeContent.scrollHeight}px`;
 		});
-
-		contents.forEach((content) => {
-			content.classList.remove("active");
-		});
-	};
+	}
 
 	tabs.forEach((tab, i) => {
 		tab.addEventListener("click", () => {
-			removeActiveClasses();
-			contents[i].classList.add("active");
+			tabs.forEach((t) => t.classList.remove("active"));
 			tab.classList.add("active");
+
+			contents.forEach((c) => {
+				c.classList.remove("active");
+				c.style.maxHeight = "0px";
+			});
+
+			const targetContent = contents[i];
+			targetContent.classList.add("active");
+
+			requestAnimationFrame(() => {
+				targetContent.style.maxHeight = `${targetContent.scrollHeight}px`;
+			});
 		});
 	});
 }
@@ -49,28 +57,34 @@ function setupTabs() {
  * @param {*} valueId - The ID of the value display element.
  * @param {*} prefKey - The key for the preference to update in Chrome's storage.
  */
-function setupSlider(sliderId, valueId, prefKey) {
-	const slider = document.getElementById(sliderId);
-	const sliderValue = document.getElementById(valueId);
+function setupSlider(sliderId: string, valueId: string, prefKey: keyof Preferences) {
+	const slider = document.getElementById(sliderId) as HTMLInputElement;
+	const sliderValue = document.getElementById(valueId) as HTMLInputElement;
 
-	chrome.storage.sync.get(["preferences"], (data) => {
+	chrome.storage.sync.get(["preferences"], (data: Data) => {
 		const preferences = data.preferences || {};
 		if (preferences[prefKey] !== undefined) {
-			slider.value = preferences[prefKey];
-			sliderValue.value = preferences[prefKey];
+			slider.value = preferences[prefKey].toString();
+			sliderValue.value = preferences[prefKey].toString();
 		}
 	});
 
-	slider.addEventListener("input", () => {
-		sliderValue.value = slider.value;
-		updatePreference(prefKey, slider.value);
+	slider?.addEventListener("input", () => {
+		if (sliderValue) {
+			sliderValue.value = slider.value;
+			updatePreference(prefKey, slider.value);
+		}
 	});
 
 	sliderValue.addEventListener("input", () => {
 		let value = Number(sliderValue.value);
-		if (value < slider.min) value = slider.min;
-		if (value > slider.max) value = slider.max;
-		slider.value = value;
+		let min = Number(slider.min);
+		let max = Number(slider.max);
+
+		if (value < min) value = min;
+		if (value > max) value = max;
+
+		slider.value = value.toString();
 		updatePreference(prefKey, value);
 	});
 }
@@ -78,16 +92,15 @@ function setupSlider(sliderId, valueId, prefKey) {
 /**
  * Sets up a color picker input element with a corresponding value display.
  * @param {*} pickerId - The ID of the color picker input element.
- * @param {*} valueId - The ID of the value display element.
  * @param {*} prefKey - The key for the preference to update in Chrome's storage.
  */
-function setupColorPicker(pickerId, prefKey) {
-	const colorPicker = document.getElementById(pickerId);
+function setupColorPicker(pickerId: string, prefKey: keyof Preferences) {
+	const colorPicker = document.getElementById(pickerId) as HTMLInputElement;
 
-	chrome.storage.sync.get(["preferences"], (data) => {
+	chrome.storage.sync.get(["preferences"], (data: Data) => {
 		const preferences = data.preferences || {};
-		if (preferences[prefKey]) {
-			colorPicker.value = preferences[prefKey];
+		if (preferences[prefKey] && colorPicker) {
+			colorPicker.value = preferences[prefKey].toString();
 		}
 	});
 
@@ -107,11 +120,7 @@ function setupResetButton() {
 		}
 		chrome.storage.sync.set({ preferences: DEFAULT_PREFERENCES }, () => {
 			setupSlider("slider-delay", "slider-delay-value", "sleepOverlayDelay");
-			setupSlider(
-				"slider-opacity",
-				"slider-opacity-value",
-				"sleepOverlayOpacity"
-			);
+			setupSlider("slider-opacity", "slider-opacity-value", "sleepOverlayOpacity");
 			setupColorPicker("color-picker", "sleepOverlayColor");
 		});
 	});
@@ -122,27 +131,26 @@ function setupResetButton() {
  */
 function setupImportButton() {
 	const importButton = document.getElementById("import-button");
-	importButton.addEventListener("click", () => {
+	importButton?.addEventListener("click", () => {
 		const input = document.createElement("input");
 		input.type = "file";
 		input.accept = ".json,application/json";
 		input.style.display = "none";
 
 		input.addEventListener("change", (event) => {
-			const file = event.target.files[0];
-			if (!file) return;
+			const files = (event.target as HTMLInputElement).files;
+			if (!files || !files[0]) return;
+			const file = files[0];
 
 			const reader = new FileReader();
 			reader.onload = () => {
 				try {
-					const jsonData = JSON.parse(reader.result);
-
-					if (!hasSameKeys(jsonData, DEFAULT_PREFERENCES)) {
-						alert(chrome.i18n.getMessage("extensionOptionImportError"));
-						return;
+					if (typeof reader.result !== "string") {
+						throw new Error("Invalid file content");
 					}
+					const jsonPreferences = JSON.parse(reader.result) as Preferences;
 
-					chrome.storage.sync.set({ preferences: jsonData }, updateVisuals);
+					chrome.storage.sync.set({ preferences: jsonPreferences }, updateVisuals);
 				} catch (error) {
 					alert(chrome.i18n.getMessage("extensionOptionImportError"));
 					return;
@@ -165,7 +173,7 @@ function setupImportButton() {
  */
 function setupExportButton() {
 	const exportButton = document.getElementById("export-button");
-	exportButton.addEventListener("click", () => {
+	exportButton?.addEventListener("click", () => {
 		chrome.storage.sync.get(["preferences"], (data) => {
 			const preferences = data.preferences || DEFAULT_PREFERENCES;
 			const json = JSON.stringify(preferences, null, 2);
@@ -190,25 +198,27 @@ function setupVersionText() {
 	const versionText = document.getElementById("version-text");
 	const version = chrome.i18n.getMessage("extensionVersion");
 	const manifest = chrome.runtime.getManifest();
-	versionText.textContent = `${version}: ${manifest.version}`;
+	if (versionText) {
+		versionText.textContent = `${version}: ${manifest.version}`;
+	}
 }
 
 /**
  * Updates the visual elements based on the current preferences.
  */
 function updateVisuals() {
-	const sliderDelay = document.getElementById("slider-delay");
-	const sliderDelayValue = document.getElementById("slider-delay-value");
-	const sliderOpacity = document.getElementById("slider-opacity");
-	const sliderOpacityValue = document.getElementById("slider-opacity-value");
-	const colorPicker = document.getElementById("color-picker");
+	const sliderDelay = getElement<HTMLInputElement>("slider-delay");
+	const sliderDelayValue = getElement<HTMLInputElement>("slider-delay-value");
+	const sliderOpacity = getElement<HTMLInputElement>("slider-opacity");
+	const sliderOpacityValue = getElement<HTMLInputElement>("slider-opacity-value");
+	const colorPicker = getElement<HTMLInputElement>("color-picker");
 
-	chrome.storage.sync.get(["preferences"], (data) => {
+	chrome.storage.sync.get(["preferences"], (data: Data) => {
 		const preferences = data.preferences || DEFAULT_PREFERENCES;
-		sliderDelay.value = preferences.sleepOverlayDelay;
-		sliderDelayValue.value = preferences.sleepOverlayDelay;
-		sliderOpacity.value = preferences.sleepOverlayOpacity;
-		sliderOpacityValue.value = preferences.sleepOverlayOpacity;
+		sliderDelay.value = preferences.sleepOverlayDelay.toString();
+		sliderDelayValue.value = preferences.sleepOverlayDelay.toString();
+		sliderOpacity.value = preferences.sleepOverlayOpacity.toString();
+		sliderOpacityValue.value = preferences.sleepOverlayOpacity.toString();
 		colorPicker.value = preferences.sleepOverlayColor;
 	});
 }
@@ -228,7 +238,11 @@ initPreferences();
 setupTabs();
 setupSlider("slider-delay", "slider-delay-value", "sleepOverlayDelay");
 setupSlider("slider-opacity", "slider-opacity-value", "sleepOverlayOpacity");
+setupSlider("slider-cinema-opacity", "slider-cinema-opacity-value", "cinemaOverlayOpacity");
+setupSlider("slider-focus", "slider-focus-value", "focusOverlayIntensity");
+setupSlider("slider-focus-opacity", "slider-focus-opacity-value", "focusOverlayOpacity");
 setupColorPicker("color-picker", "sleepOverlayColor");
+setupColorPicker("color-picker-focus", "focusOverlayColor");
 setupResetButton();
 setupImportButton();
 setupExportButton();

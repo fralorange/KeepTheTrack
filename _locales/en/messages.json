@@ -39,6 +39,11 @@
 		"description": "Filter by name."
 	},
 
+	"extensionByNamePlaceholder": {
+		"message": "Video title...",
+		"description": "Placeholder for filter's input"
+	},
+
 	"extensionByNameDescription": {
 		"message": "Filter videos by the name of the existing video.",
 		"description": "Description for filtering by name."
@@ -90,7 +95,7 @@
 	},
 
 	"extensionOptionSliderLabel": {
-		"message": "Sleep Overlay Delay",
+		"message": "Sleep Mode Overlay Delay",
 		"description": "Label for the sleep overlay delay slider."
 	},
 
@@ -100,7 +105,7 @@
 	},
 
 	"extensionOptionOpacitySliderLabel": {
-		"message": "Sleep Mode Opacity",
+		"message": "Sleep Mode Overlay Opacity",
 		"description": "Label for the sleep mode opacity slider."
 	},
 
@@ -110,7 +115,7 @@
 	},
 
 	"extensionOptionColorPickerLabel": {
-		"message": "Sleep Mode Color",
+		"message": "Sleep Mode Overlay Color",
 		"description": "Label for the sleep mode color picker."
 	},
 
@@ -137,5 +142,55 @@
 	"extensionOptionImportError": {
 		"message": "An error occurred while importing the file.",
 		"description": "Error message displayed when there is an issue importing settings."
+	},
+
+	"extensionShuffle": {
+		"message": "Shuffle",
+		"description": "Label for the shuffle option."
+	},
+
+	"extensionCinemaMode": {
+		"message": "Cinema Mode",
+		"description": "Cinema Mode Name."
+	},
+
+	"extensionFocusMode": {
+		"message": "Focus Mode",
+		"description": "Focus Mode Name."
+	},
+
+	"extensionNextVideoTitle": {
+		"message": "Empty title",
+		"description": "Placeholder for next video title."
+	},
+
+	"extensionNextVideoAuthor": {
+		"message": "Unknown author",
+		"description": "Placeholder for next video author."
+	},
+
+	"extensionOptionCinemaOpacityLabel": {
+		"message": "Cinema Mode Overlay Opacity",
+		"description": "Label for the cinema mode overlay opacity slider."
+	},
+
+	"extensionOptionFocusIntensityLabel": {
+		"message": "Focus Mode Overlay Intensity",
+		"description": "Label for the focus mode overlay intensity slider."
+	},
+
+	"extensionOptionFocusIntensityValue": {
+		"message": "Percents",
+		"description": "Label for the focus mode overlay intensity slider value."
+	},
+
+	"extensionOptionFocusColorPickerLabel": {
+		"message": "Focus Mode Overlay Color",
+		"description": "Label for the focus mode overlay color picker."
+	},
+
+	"extensionOptionFocusOpacityLabel": {
+		"message": "Focus Mode Overlay Opacity",
+		"description": "Label for the focus mode overlay opacity slider."
 	}
 }

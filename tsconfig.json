@@ -1,0 +1,29 @@
+{
+	// Visit https://aka.ms/tsconfig to read more about this file
+	"compilerOptions": {
+		// File Layout
+		"rootDir": "./src",
+		"outDir": "./dist",
+
+		// Environment Settings
+		"module": "esnext",
+		"esModuleInterop": true,
+		"target": "es6",
+		"types": ["chrome"],
+		"lib": ["DOM", "ES6"],
+		"strict": true,
+
+		// Other Outputs
+		"sourceMap": true
+
+		// Style Options
+		// "noImplicitReturns": true,
+		// "noImplicitOverride": true,
+		// "noUnusedLocals": true,
+		// "noUnusedParameters": true,
+		// "noFallthroughCasesInSwitch": true,
+		// "noPropertyAccessFromIndexSignature": true,
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"]
+}
